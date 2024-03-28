@@ -148,3 +148,77 @@ class TestUserAPI:
         api_client.credentials(HTTP_AUTHORIZATION=access_token)
         response = api_client.delete(f"{BASE_URL}/user/{username}/")
         assert response.status_code == 204
+
+
+@pytest.mark.django_db
+@pytest.mark.api
+class TestCreateUser:
+    """
+    User Create API Test
+    http://127.0.0.1:8000/api/v1/auth/users/
+    """
+
+    def test_custom_user_create_password_retyped(
+        self, api_client, create_token, new_author
+    ):
+        """
+        User Serializers Test
+        http://127.0.0.1:8000/api/v1/auth/users/
+        """
+
+        email = "p7T6M1@example.com"
+        password = "Vasya12345!"
+        password2 = "Vasya12345!"
+
+        url = "/api/v1/auth/users/"
+        data = {"email": email, "password": password, "password2": password2}
+
+        response = api_client.post(url, data=data)
+
+        assert (
+            response.status_code == 201
+        ), f"Expected status code 201, but got {response.status_code}"
+        assert response.data["username"] == f"user{response.data['id']}"
+
+    def test_custom_user_create_password_non_retyped(
+        self, api_client, create_token, new_author
+    ):
+        """
+        User Serializers Test
+        http://127.0.0.1:8000/api/v1/auth/users/
+        """
+
+        email = "p7T6M1@example.com"
+        password = "Vasya12345!"
+
+        url = "/api/v1/auth/users/"
+        data = {"email": email, "password": password}
+
+        response = api_client.post(url, data=data)
+
+        assert (
+            response.status_code == 400
+        ), f"Expected status code 400, but got {response.status_code}"
+        assert response.data["password2"][0] == "Обязательное поле."
+
+    def test_custom_user_create_password_retyped_different_password(
+        self, api_client, create_token, new_author
+    ):
+        """
+        User Serializers Test
+        http://127.0.0.1:8000/api/v1/auth/users/
+        """
+
+        email = "p7T6M2@example.com"
+        password = "Vasya12345!"
+        password2 = "Vasya123456!"
+
+        url = "/api/v1/auth/users/"
+        data = {"email": email, "password": password, "password2": password2}
+
+        response = api_client.post(url, data=data)
+
+        assert (
+            response.status_code == 400
+        ), f"Expected status code 400, but got {response.status_code}"
+        assert response.data["password"][0] == "Пароли не совпадают!"

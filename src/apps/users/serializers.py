@@ -1,7 +1,31 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer
+from django.contrib.auth.password_validation import validate_password
 
 from .models import CustomUser
+
+
+class CustomUserCreateSerializer(UserCreateSerializer):
+    """
+    Serializer for CustomUser model for create endpoint with email and two passwords
+    """
+
+    password2 = serializers.CharField(
+        style={"input_type": "password"}, required=True, write_only=True
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ["id", "email", "username", "password", "password2"]
+
+    def validate(self, attrs):
+        validate_password(attrs["password"])
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError({"password": "Пароли не совпадают!"})
+        del attrs["password2"]
+
+        return attrs
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

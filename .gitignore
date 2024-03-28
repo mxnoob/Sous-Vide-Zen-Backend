@@ -164,3 +164,4 @@ cython_debug/
 static/
 
 /db.sqlite31
+/.coveragerc

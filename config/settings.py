@@ -102,14 +102,16 @@ DJOSER = {
     "PASSWORD_RESET_CONFIRM_URL": "api/v1/auth/users/password/reset/confirm/{uid}/{token}",
     "USERNAME_RESET_CONFIRM_URL": "#/username/reset/confirm/{uid}/{token}",
     "ACTIVATION_URL": "api/v1/auth/activate/{uid}/{token}",
+    "USER_CREATE_PASSWORD_RETYPE": True,
     "SEND_ACTIVATION_EMAIL": True,
-    "SERIALIZERS": {},
     "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
     "PERMISSIONS": {
         "user_delete": ["rest_framework.permissions.IsAdminUser"],
     },
     "SERIALIZERS": {
+        # "user_create": "src.apps.users.serializers.CustomUserCreateSerializer",
+        "user_create_password_retype": "src.apps.users.serializers.CustomUserCreateSerializer",
         "current_user": "src.apps.users.serializers.CustomUserMeSerializer",
         "user": "src.apps.users.serializers.CustomUserSerializer",
     },
@@ -147,7 +149,25 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+    {
         "NAME": "src.base.validators.CustomPasswordValidator",
+    },
+    {
+        "NAME": "src.base.validators.NoUpperCaseValidator",
+    },
+    {
+        "NAME": "src.base.validators.NoLowerCaseValidator",
+    },
+    {
+        "NAME": "src.base.validators.NoNumbersValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -243,3 +263,8 @@ TIME_FROM_VIEW_RECIPE = 20
 # Regex for custom user
 
 REGEX = r"^[a-zA-Zа-яА-Я\s\-\‘\u00C0-\u017F]+$"
+
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     pass
