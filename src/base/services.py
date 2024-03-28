@@ -207,7 +207,7 @@ def count_reactions_on_objects(instance: Model) -> dict:
     return {reaction["emoji"]: reaction["count"] for reaction in reactions_queryset}
 
 
-def show_user_reactions(user: Model, instance: Model) -> dict:
+def show_user_reactions(user: Model, instance: Model) -> list:
     user_reactions = list()
     if user.is_authenticated:
         user_reactions_query = instance.reactions.filter(
