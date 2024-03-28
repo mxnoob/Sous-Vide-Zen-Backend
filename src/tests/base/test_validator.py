@@ -1,7 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
-
-from src.base.validators import CustomPasswordValidator
+from django.contrib.auth.password_validation import validate_password
 
 
 @pytest.mark.parametrize(
@@ -15,13 +14,20 @@ from src.base.validators import CustomPasswordValidator
         "ValidPassword123!",
     ],
 )
-def test_password_validator(password):
-    validator = CustomPasswordValidator()
-
+def test_password_validators(password):
+    """
+    Test all configured password validators
+    """
+    # Если пароль "ValidPassword123!", то он должен быть действительным
     if password == "ValidPassword123!":
-        # Данный пароль должен быть корректным, ожидаем, что ошибок не будет
-        assert validator.validate(password) is None
+        # Пароль должен быть принят всеми валидаторами без ошибок
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            pytest.fail(
+                f"ValidPassword123! should be a valid password, but failed with {e}"
+            )
     else:
         # Для всех остальных паролей ожидаем ValidationError
         with pytest.raises(ValidationError):
-            validator.validate(password)
+            validate_password(password)
