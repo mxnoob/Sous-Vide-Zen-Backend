@@ -1,7 +1,49 @@
 import pytest
+from django.contrib.auth import get_user_model
+from factory import Faker, SubFactory, RelatedFactoryList
+from factory.django import DjangoModelFactory
 
 from src.apps.follow.models import Follow
+from src.apps.ingredients.models import Ingredient
 from src.apps.recipes.models import Recipe
+
+User = get_user_model()
+
+
+class UserFactory(DjangoModelFactory):
+    class Meta:
+        model = User
+
+    email = Faker("email")
+    password = Faker("password")
+    username = Faker("user_name")
+
+
+class IngredientFactory(DjangoModelFactory):
+    class Meta:
+        model = Ingredient
+
+    name = Faker("word")
+
+
+class RecipeFactory(DjangoModelFactory):
+    class Meta:
+        model = Recipe
+
+    author = SubFactory(UserFactory)
+    title = Faker("word")
+    slug = Faker("slug")
+    full_text = Faker("text")
+    ingredients = RelatedFactoryList(IngredientFactory, size=3)
+    cooking_time = 10
+
+
+class FollowFactory(DjangoModelFactory):
+    class Meta:
+        model = Follow
+
+    user = SubFactory(UserFactory)
+    author = SubFactory(UserFactory)
 
 
 @pytest.mark.feed
@@ -12,62 +54,30 @@ class TestFeedUsernames:
     Test Feed Usernames
     """
 
-    def test_feed_usernames(
-        self,
-        django_user_model,
-        api_client,
-    ):
+    def test_feed_subscriptions(self, api_client):
         """
         Only posts of author subscribed to are returned
         """
 
-        new_user = django_user_model.objects.create_user(
-            username="test", password="changeme123", email="test@ya.ru"
-        )
-        response = api_client.post(
-            "/api/v1/auth/jwt/create/",
-            data={"password": "changeme123", "email": "test@ya.ru"},
-            format="json",
-        )
-        token = f'Bearer {response.data["access"]}'
-        new_user1 = django_user_model.objects.create_user(
-            username="test1", password="changeme123", email="test1@ya.ru"
-        )
-        new_user2 = django_user_model.objects.create_user(
-            username="test2", password="changeme123", email="test2@ya.ru"
-        )
-        title, full_text = "recipe", "recipe full text"
+        new_user = UserFactory()
+        new_user1 = UserFactory()
+        new_user2 = UserFactory()
 
+        title, full_text = "recipe", "recipe full text"
         num_recipes = 3
         for i in range(num_recipes):
-            Recipe.objects.create(
-                author=new_user,
-                title=title,
-                slug=f"{title}_{new_user}_{i}",
-                full_text=full_text,
-                cooking_time=10,
-            )
-            Recipe.objects.create(
-                author=new_user1,
-                title=title,
-                slug=f"{title}_{new_user1}_{i}",
-                full_text=full_text,
-                cooking_time=10,
-            )
+            for user in [new_user, new_user1, new_user2]:
+                RecipeFactory(
+                    author=user, title=title, full_text=full_text, cooking_time=10
+                )
 
-            Recipe.objects.create(
-                author=new_user2,
-                title=title,
-                slug=f"{title}_{new_user2}_{i}",
-                full_text=full_text,
-                cooking_time=10,
-            )
+        FollowFactory(user=new_user, author=new_user1)
 
-        Follow.objects.create(user=new_user, author=new_user1)
+        api_client.force_authenticate(user=new_user)
 
-        api_client.credentials(HTTP_AUTHORIZATION=token)
         url = "/api/v1/feed/?filter=subscriptions"
         response = api_client.get(url)
+
         assert [r["author"]["username"] for r in response.data["results"]] == [
             new_user1.username
         ] * num_recipes
