@@ -34,7 +34,7 @@ class RecipeFactory(DjangoModelFactory):
     title = Faker("word")
     slug = Faker("slug")
     full_text = Faker("text")
-    ingredients = RelatedFactoryList(IngredientFactory, size=3)
+    ingredients = RelatedFactoryList(IngredientFactory, size=1)
     cooking_time = 10
 
 
