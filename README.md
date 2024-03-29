@@ -1,6 +1,6 @@
 # Sous-Vide Zen Backend
 
-[![linter](https://github.com/Sous-Vide-Zen/backend/actions/workflows/linter.yml/badge.svg)](https://github.com/Sous-Vide-Zen/backend/actions/workflows/linter.yml)
+[![linter](https://github.com/Sous-Vide-Zen/backend/actions/workflows/linter.yml/badge.svg)](https://github.com/Sous-Vide-Zen/backend/actions/workflows/linter.yml) [![PyTest](https://github.com/Sous-Vide-Zen/backend/actions/workflows/pytest.yml/badge.svg)](https://github.com/Sous-Vide-Zen/backend/actions/workflows/pytest.yml)
 
 Sous-Vide Zen is a website for sharing and discovering recipes for sous-vide cooking, a technique that involves cooking food in vacuum-sealed bags at precise temperatures. Users can create their own recipes, browse popular and featured recipes, follow other users, react and comment on recipes, and save their favorites.
 
