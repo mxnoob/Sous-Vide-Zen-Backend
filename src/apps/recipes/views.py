@@ -42,7 +42,7 @@ class RecipeViewSet(
     def get_queryset(self):
         if "favorites" in self.request.path:
             queryset = (
-                Recipe.objects.filter(favorite__author__id=self.request.user.id)
+                Recipe.objects.filter(favorite__author=self.request.user)
                 .order_by("-pub_date")
                 .prefetch_related("tag", "reactions", "comments")
                 .annotate(
@@ -70,16 +70,10 @@ class RecipeViewSet(
         return queryset
 
     def get_permissions(self):
-        if "favorites" in self.request.path:
+        if self.request.method == "POST" or "favorites" in self.request.path:
             self.permission_classes = (IsAuthenticated,)
         else:
-            permission_classes = {
-                "POST": (IsAuthenticated,),
-            }
-            self.permission_classes = permission_classes.get(
-                self.request.method, (IsOwnerOrStaffOrReadOnly,)
-            )
-
+             self.permission_classes = (IsOwnerOrStaffOrReadOnly,)
         return super(RecipeViewSet, self).get_permissions()
 
     def get_serializer_class(self):
@@ -148,7 +142,7 @@ class RecipeViewSet(
             )
         recipe = get_object_or_404(Recipe, slug=slug)
         favorite_recipe = Favorite.objects.filter(
-            author__id=request.user.id, recipe=recipe
+            author=request.user, recipe=recipe
         )
 
         if not favorite_recipe.exists():
