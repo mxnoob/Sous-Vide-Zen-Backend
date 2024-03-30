@@ -42,7 +42,7 @@ class RecipeViewSet(
     def get_queryset(self):
         if "favorites" in self.request.path:
             queryset = (
-                Recipe.objects.filter(favorite__author=self.request.user)
+                Recipe.objects.filter(favorite__author__id=self.request.user.id)
                 .order_by("-pub_date")
                 .prefetch_related("tag", "reactions", "comments")
                 .annotate(
@@ -141,7 +141,9 @@ class RecipeViewSet(
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         recipe = get_object_or_404(Recipe, slug=slug)
-        favorite_recipe = Favorite.objects.filter(author=request.user, recipe=recipe)
+        favorite_recipe = Favorite.objects.filter(
+            author__id=request.user.id, recipe=recipe
+        )
 
         if not favorite_recipe.exists():
             return Response(
