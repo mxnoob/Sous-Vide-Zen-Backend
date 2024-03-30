@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -41,7 +42,7 @@ class RecipeViewSet(
     def get_queryset(self):
         if "favorites" in self.request.path:
             queryset = (
-                Recipe.objects.filter(favorite__author=self.request.user)
+                Recipe.objects.filter(favorite__author__id=self.request.user.id)
                 .order_by("-pub_date")
                 .prefetch_related("tag", "reactions", "comments")
                 .annotate(
@@ -69,21 +70,26 @@ class RecipeViewSet(
         return queryset
 
     def get_permissions(self):
-        if self.request.method == "POST" or "favorites" in self.request.path:
+        if "favorites" in self.request.path:
             self.permission_classes = (IsAuthenticated,)
         else:
-            self.permission_classes = (IsOwnerOrStaffOrReadOnly,)
+            permission_classes = {
+                "POST": (IsAuthenticated,),
+            }
+            self.permission_classes = permission_classes.get(
+                self.request.method, (IsOwnerOrStaffOrReadOnly,)
+            )
+
         return super(RecipeViewSet, self).get_permissions()
 
     def get_serializer_class(self):
-        if "favorites" in self.request.path:
-            self.serializer_class = FavoriteRecipesSerializer
-        elif self.request.method == "GET":
-            self.serializer_class = RecipeRetriveSerializer
-        elif self.request.method == "POST":
-            self.serializer_class = RecipeCreateSerializer
-        elif self.request.method == "PATCH":
-            self.serializer_class = RecipeUpdateSerializer
+        serializer_classes = {
+            "GET": RecipeRetriveSerializer,
+            "POST": RecipeCreateSerializer,
+            "PATCH": RecipeUpdateSerializer,
+        }
+        self.serializer_class = serializer_classes.get(self.request.method)
+
         return super(RecipeViewSet, self).get_serializer_class()
 
     def retrieve(self, request, *args, **kwargs):
@@ -100,51 +106,59 @@ class RecipeViewSet(
             {"message": "Рецепт успешно удален"}, status=status.HTTP_204_NO_CONTENT
         )
 
-    @action(methods=["post", "delete"], detail=True)
-    def favorite(self, request, slug):
-        """Добавление рецепта в избранное/удаление из избранного."""
-
-        recipe = self.get_object()
-        favorite_recipe = Favorite.objects.filter(author=request.user, recipe=recipe)
-        if request.method == "DELETE":
-            if not favorite_recipe.exists():
-                return Response(
-                    {"detail": "Рецепт не находится в избранном."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            favorite_recipe.delete()
-            return Response(
-                {"detail": "Рецепт удален из избранного."},
-                status=status.HTTP_204_NO_CONTENT,
-            )
-
-        if favorite_recipe.exists():
-            return Response(
-                {"detail": "Рецепт уже находится в избранном."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        Favorite.objects.create(author=request.user, recipe=recipe)
-
-        return Response(
-            {"detail": "Рецепт добавлен в избранное."}, status=status.HTTP_201_CREATED
-        )
-
     @action(
+        detail=False,
         methods=[
             "get",
         ],
-        detail=False,
         pagination_class=FeedPagination,
     )
     def favorites(self, request):
-        """Получение списка избранных рецептов пользователя с пагинацией."""
+        """Getting a list of favorite user's recipes with pagination."""
 
         queryset = self.get_queryset()
         if not queryset:
             return Response({"detail": "Список избранных рецептов пуст."})
 
-        serializer = self.get_serializer_class()
+        serializer = FavoriteRecipesSerializer
         page = self.paginate_queryset(queryset)
         serializer = serializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)
+
+    def add_to_favorites(self, request, slug):
+        recipe = get_object_or_404(Recipe, slug=slug)
+        favorite_recipe, created = Favorite.objects.get_or_create(
+            author=request.user, recipe=recipe
+        )
+        if not created:
+            return Response(
+                {"detail": "Рецепт уже находится в избранном."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return Response(
+            {"detail": "Рецепт добавлен в избранное."}, status=status.HTTP_201_CREATED
+        )
+
+    def remove_from_favorites(self, request, slug):
+        if not request.user.is_authenticated:
+            return Response(
+                data={"detail": "Учетные данные не были предоставлены."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        recipe = get_object_or_404(Recipe, slug=slug)
+        favorite_recipe = Favorite.objects.filter(
+            author__id=request.user.id, recipe=recipe
+        )
+
+        if not favorite_recipe.exists():
+            return Response(
+                data={"detail": "Рецепт не находится в избранном."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        favorite_recipe.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+            data={"detail": "Рецепт удален из избранного."},
+        )
