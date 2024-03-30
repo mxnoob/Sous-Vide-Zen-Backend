@@ -70,16 +70,10 @@ class RecipeViewSet(
         return queryset
 
     def get_permissions(self):
-        if "favorites" in self.request.path:
+        if self.request.method == "POST" or "favorites" in self.request.path:
             self.permission_classes = (IsAuthenticated,)
         else:
-            permission_classes = {
-                "POST": (IsAuthenticated,),
-            }
-            self.permission_classes = permission_classes.get(
-                self.request.method, (IsOwnerOrStaffOrReadOnly,)
-            )
-
+            self.permission_classes = (IsOwnerOrStaffOrReadOnly,)
         return super(RecipeViewSet, self).get_permissions()
 
     def get_serializer_class(self):
