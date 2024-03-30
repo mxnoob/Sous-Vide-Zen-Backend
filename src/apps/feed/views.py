@@ -32,41 +32,38 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
         last_month_start = make_aware(
             datetime.now() - timedelta(days=ACTIVITY_INTERVAL)
         )
-        queryset = (
-            Recipe.objects.all()
-            .prefetch_related(
-                Prefetch(
-                    "comments",
-                    queryset=Comment.objects.all(),
-                ),
-                Prefetch(
-                    "views",
-                    queryset=ViewRecipes.objects.all(),
-                ),
-                Prefetch(
-                    "reactions",
-                    queryset=Reaction.objects.all(),
-                ),
-            )
-            .annotate(
-                comments_count=Count(
-                    "comments", filter=Q(comments__pub_date__gte=last_month_start)
-                ),
-                views_count=Count(
-                    "views",
-                    filter=Q(views__created_at__gte=last_month_start),
-                ),
-                reactions_count=Count(
-                    "reactions",
-                    filter=Q(reactions__pub_date__gte=last_month_start),
-                ),
-                total_comments_count=Count("comments"),
-                total_views_count=Count("views"),
-                total_reactions_count=Count("reactions"),
-                activity_count=F("comments_count")
-                + F("views_count")
-                + F("reactions_count"),
-            )
+        recipes_list = Recipe.objects.all()
+        queryset = recipes_list.prefetch_related(
+            Prefetch(
+                "comments",
+                queryset=Comment.objects.all(),
+            ),
+            Prefetch(
+                "views",
+                queryset=ViewRecipes.objects.all(),
+            ),
+            Prefetch(
+                "reactions",
+                queryset=Reaction.objects.all(),
+            ),
+        ).annotate(
+            comments_count=Count(
+                "comments", filter=Q(comments__pub_date__gte=last_month_start)
+            ),
+            views_count=Count(
+                "views",
+                filter=Q(views__created_at__gte=last_month_start),
+            ),
+            reactions_count=Count(
+                "reactions",
+                filter=Q(reactions__pub_date__gte=last_month_start),
+            ),
+            total_comments_count=Count("comments"),
+            total_views_count=Count("views"),
+            total_reactions_count=Count("reactions"),
+            activity_count=F("comments_count")
+            + F("views_count")
+            + F("reactions_count"),
         )
         return queryset
 
