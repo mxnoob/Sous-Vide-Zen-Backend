@@ -220,3 +220,24 @@ class RecipeUpdateSerializer(BaseRecipeSerializer):
                 instance.ingredients.set(ingredients_instance)
 
         return super().update(instance, validated_data)
+
+
+class FavoriteRecipesSerializer(RecipeRetriveSerializer):
+    comments_count = IntegerField(read_only=True)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            "id",
+            "title",
+            "slug",
+            "author",
+            "preview_image",
+            "short_text",
+            "tag",
+            "comments_count",
+            "reactions_count",
+            "views_count",
+            "cooking_time",
+            "pub_date",
+        )
