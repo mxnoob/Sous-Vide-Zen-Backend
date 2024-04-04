@@ -37,11 +37,11 @@ class TestFavoriteRecipesListPage:
                         ("preview_image", new_recipe.preview_image),
                         ("short_text", new_recipe.short_text),
                         ("tag", []),
+                        ("cooking_time", new_recipe.cooking_time),
+                        ("pub_date", None),
                         ("comments_count", 0),
                         ("reactions_count", 0),
                         ("views_count", 0),
-                        ("cooking_time", new_recipe.cooking_time),
-                        ("pub_date", None),
                     ]
                 )
             ],

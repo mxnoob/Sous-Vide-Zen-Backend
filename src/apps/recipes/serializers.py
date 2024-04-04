@@ -4,11 +4,7 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import CurrentUserDefault, HiddenField
-from rest_framework.serializers import (
-    ModelSerializer,
-    IntegerField,
-    SlugField,
-)
+from rest_framework.serializers import ModelSerializer, IntegerField, SlugField
 from taggit.serializers import TagListSerializerField, TagList
 
 from config.settings import SHORT_RECIPE_SYMBOLS
@@ -76,9 +72,9 @@ class BaseRecipeSerializer(ModelSerializer):
         model = Recipe
         fields = (
             "id",
-            "author",
             "title",
             "slug",
+            "author",
             "preview_image",
             "ingredients",
             "full_text",
@@ -103,17 +99,13 @@ class BaseRecipeSerializer(ModelSerializer):
         return data
 
 
-class RecipeRetriveSerializer(ModelSerializer):
+class BaseRecipeListSerializer(ModelSerializer):
     """
-    Recipe serializer
+    Base serializer for list of recipes
     """
 
-    ingredients = IngredientInRecipeSerializer(many=True)
-    tag = TagSerializer(required=False)
     author = AuthorInRecipeSerializer(read_only=True)
-    category = CategorySerializer(many=True, required=False)
-    reactions_count = IntegerField(read_only=True)
-    views_count = IntegerField(read_only=True)
+    tag = TagSerializer(read_only=True)
 
     class Meta:
         model = Recipe
@@ -123,14 +115,27 @@ class RecipeRetriveSerializer(ModelSerializer):
             "slug",
             "author",
             "preview_image",
-            "ingredients",
-            "full_text",
+            "short_text",
             "tag",
-            "reactions_count",
-            "views_count",
-            "category",
             "cooking_time",
             "pub_date",
+        )
+
+
+class RecipeRetriveSerializer(BaseRecipeSerializer):
+    """
+    Recipe serializer
+    """
+
+    author = AuthorInRecipeSerializer(read_only=True)
+    category = CategorySerializer(many=True, required=False)
+    reactions_count = IntegerField(read_only=True)
+    views_count = IntegerField(read_only=True)
+
+    class Meta(BaseRecipeSerializer.Meta):
+        fields = BaseRecipeSerializer.Meta.fields + (
+            "reactions_count",
+            "views_count",
             "updated_at",
         )
 
@@ -208,22 +213,14 @@ class RecipeUpdateSerializer(BaseRecipeSerializer):
         return super().update(instance, validated_data)
 
 
-class FavoriteRecipesSerializer(RecipeRetriveSerializer):
+class FavoriteRecipesSerializer(BaseRecipeListSerializer):
     comments_count = IntegerField(read_only=True)
+    reactions_count = IntegerField(read_only=True)
+    views_count = IntegerField(read_only=True)
 
-    class Meta:
-        model = Recipe
-        fields = (
-            "id",
-            "title",
-            "slug",
-            "author",
-            "preview_image",
-            "short_text",
-            "tag",
+    class Meta(BaseRecipeListSerializer.Meta):
+        fields = BaseRecipeListSerializer.Meta.fields + (
             "comments_count",
             "reactions_count",
             "views_count",
-            "cooking_time",
-            "pub_date",
         )
