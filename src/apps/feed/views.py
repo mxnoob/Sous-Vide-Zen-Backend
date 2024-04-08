@@ -50,7 +50,8 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
             )
             .annotate(
                 latest_comments_count=Count(
-                    "comments", filter=Q(comments__pub_date__gte=last_month_start)
+                    "comments",
+                    filter=Q(comments__pub_date__gte=last_month_start),
                     distinct=True,
                 ),
                 latest_views_count=Count(

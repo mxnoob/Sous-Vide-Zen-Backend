@@ -81,7 +81,7 @@ class TestFeedResponseFields:
 
         response = api_client.get(url)
 
-        assert response.data["results"][0]["total_reactions_count"] == 30
+        assert response.data["results"][0]["reactions_count"] == 30
         assert response.data["results"][0]["activity_count"] == 20
 
         ViewFactory.create_batch(self.NUM_NEW_ACTIVITY, recipe=new_recipe)
@@ -96,7 +96,7 @@ class TestFeedResponseFields:
 
         response = api_client.get(url)
 
-        assert response.data["results"][0]["total_views_count"] == 30
+        assert response.data["results"][0]["views_count"] == 30
         assert response.data["results"][0]["activity_count"] == 40
 
         CommentFactory.create_batch(self.NUM_NEW_ACTIVITY, recipe=new_recipe)
@@ -115,5 +115,5 @@ class TestFeedResponseFields:
 
         response = api_client.get(url)
 
-        assert response.data["results"][0]["total_comments_count"] == 30
+        assert response.data["results"][0]["comments_count"] == 30
         assert response.data["results"][0]["activity_count"] == 60
