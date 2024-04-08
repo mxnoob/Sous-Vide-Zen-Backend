@@ -37,6 +37,4 @@ class TestFeedResponseFields:
             )
         url = "/api/v1/feed/?ordering=-activity_count"
         response = api_client.get(url)
-        assert response.data["results"][0]["total_reactions_count"] == len(
-            EmojyChoice.values
-        )
+        assert response.data["results"][0]["reactions_count"] == len(EmojyChoice.values)

@@ -1,4 +1,3 @@
-from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
@@ -23,7 +22,7 @@ from .serializers import (
     RecipeRetriveSerializer,
     RecipeCreateSerializer,
     RecipeUpdateSerializer,
-    FavoriteRecipesSerializer,
+    BaseRecipeListSerializer,
 )
 
 
@@ -44,28 +43,14 @@ class RecipeViewSet(
             queryset = (
                 Recipe.objects.filter(favorite__author=self.request.user)
                 .order_by("-pub_date")
-                .prefetch_related("tag", "reactions", "comments")
-                .annotate(
-                    reactions_count=Count("reactions", distinct=True),
-                    views_count=Count("views", distinct=True),
-                    comments_count=Count("comments", distinct=True),
-                )
+                .prefetch_related("tag", "reactions", "comments", "views")
             )
             return queryset
         slug = self.kwargs.get("slug")
         queryset = (
             Recipe.objects.filter(slug=slug)
             .select_related("author")
-            .prefetch_related(
-                "ingredients",
-                "category",
-                "tag",
-                "reactions",
-            )
-            .annotate(
-                reactions_count=Count("reactions", distinct=True),
-                views_count=Count("views", distinct=True),
-            )
+            .prefetch_related("ingredients", "category", "tag", "reactions", "views")
         )
         return queryset
 
@@ -114,7 +99,7 @@ class RecipeViewSet(
         if not queryset:
             return Response({"detail": "Список избранных рецептов пуст."})
 
-        serializer = FavoriteRecipesSerializer
+        serializer = BaseRecipeListSerializer
         page = self.paginate_queryset(queryset)
         serializer = serializer(page, many=True)
 

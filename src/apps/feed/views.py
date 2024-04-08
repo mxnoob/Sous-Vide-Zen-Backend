@@ -49,23 +49,20 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ),
             )
             .annotate(
-                comments_count=Count(
+                latest_comments_count=Count(
                     "comments", filter=Q(comments__pub_date__gte=last_month_start)
                 ),
-                views_count=Count(
+                latest_views_count=Count(
                     "views",
                     filter=Q(views__created_at__gte=last_month_start),
                 ),
-                reactions_count=Count(
+                latest_reactions_count=Count(
                     "reactions",
                     filter=Q(reactions__pub_date__gte=last_month_start),
                 ),
-                total_comments_count=Count("comments"),
-                total_views_count=Count("views"),
-                total_reactions_count=Count("reactions"),
-                activity_count=F("comments_count")
-                + F("views_count")
-                + F("reactions_count"),
+                activity_count=F("latest_comments_count")
+                + F("latest_views_count")
+                + F("latest_reactions_count"),
             )
         )
         return queryset

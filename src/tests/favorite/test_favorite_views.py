@@ -2,7 +2,7 @@ from collections import OrderedDict
 import pytest
 
 from src.apps.favorite.models import Favorite
-from src.apps.recipes.serializers import FavoriteRecipesSerializer
+from src.apps.recipes.serializers import BaseRecipeListSerializer
 
 
 @pytest.mark.favorite
@@ -37,11 +37,11 @@ class TestFavoriteRecipesListPage:
                         ("preview_image", new_recipe.preview_image),
                         ("short_text", new_recipe.short_text),
                         ("tag", []),
-                        ("cooking_time", new_recipe.cooking_time),
-                        ("pub_date", None),
                         ("comments_count", 0),
                         ("reactions_count", 0),
                         ("views_count", 0),
+                        ("cooking_time", new_recipe.cooking_time),
+                        ("pub_date", None),
                     ]
                 )
             ],
@@ -57,13 +57,10 @@ class TestFavoriteRecipesListPage:
         assert response.data == example_data
         assert response.status_code == 200
 
-        serializer = FavoriteRecipesSerializer(new_recipe)
+        serializer = BaseRecipeListSerializer(new_recipe)
         serializer_data = serializer.data.copy()
         serializer_data.pop("pub_date", None)
         example_data = example_data["results"][-1]
-        example_data.pop("comments_count")
-        example_data.pop("reactions_count")
-        example_data.pop("views_count")
         example_data.pop("pub_date")
 
         assert OrderedDict(serializer_data) == example_data

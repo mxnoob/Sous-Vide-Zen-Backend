@@ -17,7 +17,7 @@ class TestRecipeSerialisers:
     RecipeUpdateSerializer
     """
 
-    def test_retrive_recipe_serializer(self, new_recipe):
+    def test_retrive_recipe_serializer(self, request, new_recipe, new_user):
         """
         Test for retrive recipe
         [GET] http://127.0.0.1:8000/api/v1/recipe/{slug}/
@@ -39,15 +39,17 @@ class TestRecipeSerialisers:
             "ingredients": [],
             "full_text": "This is a test recipe full text.",
             "tag": [],
+            "reactions_count": 0,
+            "views_count": 0,
             "category": [],
             "cooking_time": 30,
+            "is_favorite": False,
         }
-
-        serializer = RecipeRetriveSerializer(new_recipe)
+        request.user = new_user
+        serializer = RecipeRetriveSerializer(new_recipe, context={"request": request})
         serializer_data = serializer.data.copy()
         serializer_data.pop("pub_date", None)
         serializer_data.pop("updated_at", None)
-
         assert serializer_data == recipe_data
 
     def test_create_recipe_serializer(self, api_client, new_author, recipe_data):

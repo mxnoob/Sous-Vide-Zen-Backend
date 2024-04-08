@@ -1,13 +1,15 @@
 from datetime import timedelta
 
+from rest_framework.serializers import SerializerMethodField
 from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.fields import CurrentUserDefault, HiddenField
-from rest_framework.serializers import ModelSerializer, IntegerField, SlugField
+from rest_framework.serializers import ModelSerializer, SlugField
 from taggit.serializers import TagListSerializerField, TagList
 
 from config.settings import SHORT_RECIPE_SYMBOLS
+from src.apps.favorite.models import Favorite
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
@@ -117,6 +119,9 @@ class BaseRecipeListSerializer(ModelSerializer):
             "preview_image",
             "short_text",
             "tag",
+            "comments_count",
+            "reactions_count",
+            "views_count",
             "cooking_time",
             "pub_date",
         )
@@ -129,15 +134,21 @@ class RecipeRetriveSerializer(BaseRecipeSerializer):
 
     author = AuthorInRecipeSerializer(read_only=True)
     category = CategorySerializer(many=True, required=False)
-    reactions_count = IntegerField(read_only=True)
-    views_count = IntegerField(read_only=True)
+    is_favorite = SerializerMethodField()
 
     class Meta(BaseRecipeSerializer.Meta):
         fields = BaseRecipeSerializer.Meta.fields + (
             "reactions_count",
             "views_count",
             "updated_at",
+            "is_favorite",
         )
+
+    def get_is_favorite(self, instance):
+
+        return Favorite.objects.filter(
+            author__id=self.context.get("request").user.id, recipe=instance
+        ).exists()
 
 
 class RecipeCreateSerializer(BaseRecipeSerializer):
@@ -211,16 +222,3 @@ class RecipeUpdateSerializer(BaseRecipeSerializer):
                 instance.ingredients.set(ingredients_instance)
 
         return super().update(instance, validated_data)
-
-
-class FavoriteRecipesSerializer(BaseRecipeListSerializer):
-    comments_count = IntegerField(read_only=True)
-    reactions_count = IntegerField(read_only=True)
-    views_count = IntegerField(read_only=True)
-
-    class Meta(BaseRecipeListSerializer.Meta):
-        fields = BaseRecipeListSerializer.Meta.fields + (
-            "comments_count",
-            "reactions_count",
-            "views_count",
-        )

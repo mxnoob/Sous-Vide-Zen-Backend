@@ -54,6 +54,18 @@ class Recipe(models.Model):
         """
         return f"{self.slug}"
 
+    @property
+    def comments_count(self):
+        return self.comments.count()
+
+    @property
+    def reactions_count(self):
+        return self.reactions.count()
+
+    @property
+    def views_count(self):
+        return self.views.count()
+
 
 class Category(models.Model):
     """
