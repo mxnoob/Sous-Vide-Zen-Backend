@@ -1,6 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
-from factory import Faker, SubFactory, RelatedFactoryList
+from factory import Faker, RelatedFactoryList, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 
 from src.apps.follow.models import Follow
@@ -23,7 +23,7 @@ class IngredientFactory(DjangoModelFactory):
     class Meta:
         model = Ingredient
 
-    name = Faker("word")
+    name = Sequence(lambda n: "word #%s" % n)
 
 
 class RecipeFactory(DjangoModelFactory):
