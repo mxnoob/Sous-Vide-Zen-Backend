@@ -5,7 +5,7 @@ from random import sample
 from typing import Type
 
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Model
 from django.http import HttpRequest
@@ -207,7 +207,7 @@ def count_reactions_on_objects(instance: Model) -> dict:
     return {reaction["emoji"]: reaction["count"] for reaction in reactions_queryset}
 
 
-def show_user_reactions(user: Model, instance: Model) -> dict:
+def show_user_reactions(user: Model, instance: Model) -> list:
     user_reactions = list()
     if user.is_authenticated:
         user_reactions_query = instance.reactions.filter(
