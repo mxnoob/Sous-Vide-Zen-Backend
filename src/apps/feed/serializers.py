@@ -22,6 +22,6 @@ class FeedSerializer(BaseRecipeListSerializer):
 
     def get_is_favorite(self, instance):
 
-        return Favorite.objects.filter(
-            author__id=self.context.get("request").user.id, recipe=instance
+        return instance.favorite.filter(
+            author__id=self.context.get("request").user.id
         ).exists()
