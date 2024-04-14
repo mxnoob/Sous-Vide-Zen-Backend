@@ -97,6 +97,17 @@ class TestUserAPI:
             == "У вас недостаточно прав для выполнения данного действия."
         )
 
+    def test_update_user_unauthorized(self, api_client, new_user):
+        """
+        Test updating a user without authorization.
+        Endpoint: http://127.0.0.1:8000/api/v1/user/{username}/
+        """
+
+        data = {"display_name": "new Display Name"}
+        response = api_client.patch(f"{BASE_URL}/user/{new_user.username}/", data=data)
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Учетные данные не были предоставлены."
+
     def test_get_users(self, api_client, create_token):
         """
         Test getting a list of users.
@@ -148,6 +159,16 @@ class TestUserAPI:
         api_client.credentials(HTTP_AUTHORIZATION=access_token)
         response = api_client.delete(f"{BASE_URL}/user/{username}/")
         assert response.status_code == 204
+
+    def test_delete_user_unauthorized(self, api_client, new_user):
+        """
+        Test deleting a user without authorization.
+        Endpoint: http://127.0.0.1:8000/api/v1/user/{username}/
+        """
+
+        response = api_client.delete(f"{BASE_URL}/user/{new_user.username}/")
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Учетные данные не были предоставлены."
 
 
 @pytest.mark.django_db
