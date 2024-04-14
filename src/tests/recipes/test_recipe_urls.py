@@ -71,6 +71,22 @@ class TestRecipeUrls:
             == 400
         )
 
+    def test_create_recipe_with_len_units_ingredients_less_more_than_30_characters(
+        self, api_client, new_author, recipe_data
+    ):
+        """
+        Test for create recipe
+        [POST] http://127.0.0.1:8000/api/v1/recipe/
+        """
+
+        api_client.force_authenticate(user=new_author)
+        recipe_data["ingredients"][0]["unit"] = ["a" * 31]
+        print(recipe_data)
+        assert (
+            api_client.post("/api/v1/recipe/", recipe_data, format="json").status_code
+            == 400
+        )
+
     def test_create_recipe_with_cooking_time_less_than_ten_minutes(
         self, api_client, new_author, recipe_data
     ):

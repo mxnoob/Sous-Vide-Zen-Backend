@@ -10,7 +10,7 @@ class IngredientInRecipeSerializer(ModelSerializer):
     """
 
     name = CharField(source="ingredient.name", max_length=100)
-    unit = CharField(source="unit.name")
+    unit = CharField(source="unit.name", max_length=30)
 
     class Meta:
         model = IngredientInRecipe
@@ -21,6 +21,10 @@ class IngredientInRecipeSerializer(ModelSerializer):
         )
 
     def validate_amount(self, value):
+        """
+        Validate amount
+        """
+
         if value <= 0:
             raise serializers.ValidationError("Количество должно быть больше 0")
         return value
