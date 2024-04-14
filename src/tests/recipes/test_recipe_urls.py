@@ -80,7 +80,8 @@ class TestRecipeUrls:
         """
 
         api_client.force_authenticate(user=new_author)
-        recipe_data["units"] = ["a" * 31]
+        recipe_data["ingredients"][0]["unit"] = ["a" * 31]
+        print(recipe_data)
         assert (
             api_client.post("/api/v1/recipe/", recipe_data, format="json").status_code
             == 400
