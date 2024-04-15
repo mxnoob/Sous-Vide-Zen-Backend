@@ -56,6 +56,40 @@ class TestRecipeUrls:
             == 400
         )
 
+    def test_create_recipe_with_2_equal_ingredients(
+        self, api_client, new_author, recipe_data
+    ):
+        """
+        Test for create recipe
+        [POST] http://127.0.0.1:8000/api/v1/recipe/
+        """
+
+        api_client.force_authenticate(user=new_author)
+        recipe_data["ingredients"].append(recipe_data["ingredients"][0])
+        response = api_client.post("/api/v1/recipe/", recipe_data, format="json")
+        assert response.status_code == 400
+        assert response.data == {"errors": "Нельзя добавить два одинаковых ингредиента"}
+
+    def test_create_recipe_if_slug_exists(self, api_client, new_author, recipe_data):
+        """
+        Test for create recipe
+        [POST] http://127.0.0.1:8000/api/v1/recipe/
+        """
+
+        slug = "varenye-iaitsa"
+        api_client.force_authenticate(user=new_author)
+        response = api_client.post("/api/v1/recipe/", recipe_data, format="json")
+        assert response.status_code == 201
+        assert response.data["slug"] == slug
+
+        response = api_client.post("/api/v1/recipe/", recipe_data, format="json")
+        assert response.status_code == 201
+        assert response.data["slug"] == slug + "_2"
+
+        response = api_client.post("/api/v1/recipe/", recipe_data, format="json")
+        assert response.status_code == 201
+        assert response.data["slug"] == slug + "_3"
+
     def test_create_recipe_with_value_ingredients_less_than_or_equal_to_zero(
         self, api_client, new_author, recipe_data
     ):
