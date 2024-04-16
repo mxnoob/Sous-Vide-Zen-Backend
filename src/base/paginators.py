@@ -13,3 +13,7 @@ class FeedPagination(PageNumberPagination):
 
 class FollowerPagination(PageNumberPagination):
     page_size = settings.FOLLOWER_PAGE_SIZE
+
+
+class CommentPagination(PageNumberPagination):
+    page_size = settings.COMMENT_PAGE_SIZE

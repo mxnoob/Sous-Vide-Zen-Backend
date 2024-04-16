@@ -7,9 +7,6 @@ from rest_framework import filters, viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from config.settings import ACTIVITY_INTERVAL
-from src.apps.comments.models import Comment
-from src.apps.favorite.models import Favorite
-from src.apps.reactions.models import Reaction
 from src.apps.recipes.models import Recipe
 from src.base.paginators import FeedPagination
 from .filters import FeedFilter
@@ -79,9 +76,9 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 activity_count=F("latest_comments_count")
                 + F("latest_views_count")
                 + F("latest_reactions_count"),
-            ),
+            )
         )
-        return queryset[0]
+        return queryset
 
     def get_permissions(self):
         """
