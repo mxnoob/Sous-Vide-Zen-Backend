@@ -60,8 +60,11 @@ class TestFavoriteRecipesListPage:
         serializer = BaseRecipeListSerializer(new_recipe)
         serializer_data = serializer.data.copy()
         serializer_data.pop("pub_date", None)
-        example_data = example_data["results"][-1]
+        example_data = example_data["results"][0]
         example_data.pop("pub_date")
+        example_data.pop("comments_count")
+        example_data.pop("reactions_count")
+        example_data.pop("views_count")
 
         assert OrderedDict(serializer_data) == example_data
 

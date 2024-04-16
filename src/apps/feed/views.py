@@ -39,20 +39,6 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         queryset = (
             Recipe.objects.all()
-            .prefetch_related(
-                Prefetch(
-                    "comments",
-                    queryset=Comment.objects.all(),
-                ),
-                Prefetch(
-                    "views",
-                    queryset=ViewRecipes.objects.all(),
-                ),
-                Prefetch(
-                    "reactions",
-                    queryset=Reaction.objects.all(),
-                ),
-                Prefetch("favorite", queryset=Favorite.objects.all()),
             .only(
                 "id",
                 "title",
@@ -67,10 +53,10 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "pub_date",
                 "tag__name",
                 "cooking_time",
-                "favorite"
+                "favorite",
             )
             .select_related("author")
-            .prefetch_related("tag", "category")
+            .prefetch_related("tag", "category", "favorite")
             .annotate(
                 latest_comments_count=Count(
                     "comments",
@@ -93,9 +79,9 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 activity_count=F("latest_comments_count")
                 + F("latest_views_count")
                 + F("latest_reactions_count"),
-            )
+            ),
         )
-        return queryset
+        return queryset[0]
 
     def get_permissions(self):
         """

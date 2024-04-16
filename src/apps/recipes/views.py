@@ -44,7 +44,7 @@ class RecipeViewSet(
             queryset = (
                 Recipe.objects.filter(favorite__author=self.request.user)
                 .order_by("-pub_date")
-                .prefetch_related("tag", "reactions", "comments", "views", "favorite")
+                .prefetch_related("tag", "reactions", "comments", "views")
                 .annotate(
                     reactions_count=Count("reactions", distinct=True),
                     views_count=Count("views", distinct=True),
@@ -56,9 +56,7 @@ class RecipeViewSet(
         queryset = (
             Recipe.objects.filter(slug=slug)
             .select_related("author")
-            .prefetch_related(
-                "ingredients", "category", "tag", "reactions", "views", "favorite"
-            )
+            .prefetch_related("ingredients", "category", "tag", "reactions", "views")
             .annotate(
                 reactions_count=Count("reactions", distinct=True),
                 views_count=Count("views", distinct=True),
