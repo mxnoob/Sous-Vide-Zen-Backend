@@ -1,7 +1,6 @@
 import pytest
 from django.contrib.contenttypes.models import ContentType
 
-from src.apps.favorite.models import Favorite
 from src.apps.reactions.choices import EmojyChoice
 from src.apps.reactions.models import Reaction
 from src.apps.recipes.models import Recipe

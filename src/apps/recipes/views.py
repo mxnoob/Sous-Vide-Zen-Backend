@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
@@ -43,14 +44,25 @@ class RecipeViewSet(
             queryset = (
                 Recipe.objects.filter(favorite__author=self.request.user)
                 .order_by("-pub_date")
-                .prefetch_related("tag", "reactions", "comments", "views")
+                .prefetch_related("tag", "reactions", "comments", "views", "favorite")
+                .annotate(
+                    reactions_count=Count("reactions", distinct=True),
+                    views_count=Count("views", distinct=True),
+                    comments_count=Count("comments", distinct=True),
+                )
             )
             return queryset
         slug = self.kwargs.get("slug")
         queryset = (
             Recipe.objects.filter(slug=slug)
             .select_related("author")
-            .prefetch_related("ingredients", "category", "tag", "reactions", "views")
+            .prefetch_related(
+                "ingredients", "category", "tag", "reactions", "views", "favorite"
+            )
+            .annotate(
+                reactions_count=Count("reactions", distinct=True),
+                views_count=Count("views", distinct=True),
+            )
         )
         return queryset
 

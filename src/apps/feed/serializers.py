@@ -1,6 +1,5 @@
 from rest_framework.serializers import IntegerField, SerializerMethodField
 
-from src.apps.favorite.models import Favorite
 from src.apps.recipes.serializers import BaseRecipeListSerializer, CategorySerializer
 
 

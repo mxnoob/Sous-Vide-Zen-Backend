@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from rest_framework.serializers import SerializerMethodField
+from rest_framework.serializers import IntegerField
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
@@ -10,7 +10,6 @@ from rest_framework.serializers import ModelSerializer, SlugField
 from taggit.serializers import TagListSerializerField, TagList
 
 from config.settings import SHORT_RECIPE_SYMBOLS
-from src.apps.favorite.models import Favorite
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
@@ -122,6 +121,9 @@ class BaseRecipeListSerializer(ModelSerializer):
 
     author = AuthorInRecipeSerializer(read_only=True)
     tag = TagSerializer(read_only=True)
+    comments_count = IntegerField(read_only=True)
+    reactions_count = IntegerField(read_only=True)
+    views_count = IntegerField(read_only=True)
 
     class Meta:
         model = Recipe
@@ -148,21 +150,15 @@ class RecipeRetriveSerializer(BaseRecipeSerializer):
 
     author = AuthorInRecipeSerializer(read_only=True)
     category = CategorySerializer(many=True, required=False)
-    is_favorite = SerializerMethodField()
+    reactions_count = IntegerField(read_only=True)
+    views_count = IntegerField(read_only=True)
 
     class Meta(BaseRecipeSerializer.Meta):
         fields = BaseRecipeSerializer.Meta.fields + (
             "reactions_count",
             "views_count",
             "updated_at",
-            "is_favorite",
         )
-
-    def get_is_favorite(self, instance):
-
-        return instance.favorite.filter(
-            author__id=self.context.get("request").user.id
-        ).exists()
 
 
 class RecipeCreateSerializer(BaseRecipeSerializer):

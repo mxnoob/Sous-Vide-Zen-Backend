@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from config.settings import ACTIVITY_INTERVAL
 from src.apps.comments.models import Comment
+from src.apps.favorite.models import Favorite
 from src.apps.reactions.models import Reaction
 from src.apps.recipes.models import Recipe
 from src.apps.view.models import ViewRecipes
@@ -47,6 +48,7 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                     "reactions",
                     queryset=Reaction.objects.all(),
                 ),
+                Prefetch("favorite", queryset=Favorite.objects.all()),
             )
             .annotate(
                 latest_comments_count=Count(
@@ -64,6 +66,9 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                     filter=Q(reactions__pub_date__gte=last_month_start),
                     distinct=True,
                 ),
+                comments_count=Count("comments", distinct=True),
+                views_count=Count("views", distinct=True),
+                reactions_count=Count("reactions", distinct=True),
                 activity_count=F("latest_comments_count")
                 + F("latest_views_count")
                 + F("latest_reactions_count"),

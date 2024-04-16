@@ -1,4 +1,5 @@
 import pytest
+from collections import OrderedDict
 
 
 @pytest.mark.django_db
@@ -15,7 +16,34 @@ class TestRecipeUrls:
         """
 
         slug_new_recipe = new_recipe.slug
-        assert client.get(f"/api/v1/recipe/{slug_new_recipe}/").status_code == 200
+        recipe_data = recipe_data = {
+            "id": 1,
+            "title": "Test Recipe",
+            "slug": "test-recipe",
+            "author": OrderedDict(
+                [
+                    ("id", 1),
+                    ("username", "user1"),
+                    ("display_name", None),
+                    ("avatar", None),
+                ]
+            ),
+            "preview_image": None,
+            "ingredients": [],
+            "full_text": "This is a test recipe full text.",
+            "tag": [],
+            "category": [],
+            "cooking_time": 30,
+            "reactions_count": 0,
+            "views_count": 0,
+        }
+        response = client.get(f"/api/v1/recipe/{slug_new_recipe}/")
+        assert response.status_code == 200
+
+        response_data = response.data.copy()
+        response_data.pop("pub_date", None)
+        response_data.pop("updated_at", None)
+        assert response_data == recipe_data
 
     def test_retrive_recipes_not_found(self, client):
         """
