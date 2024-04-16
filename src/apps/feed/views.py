@@ -79,9 +79,9 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 activity_count=F("latest_comments_count")
                 + F("latest_views_count")
                 + F("latest_reactions_count"),
-            ),
+            )
         )
-        return queryset[0]
+        return queryset
 
     def get_permissions(self):
         """
