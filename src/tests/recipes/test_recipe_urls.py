@@ -16,7 +16,7 @@ class TestRecipeUrls:
         """
 
         slug_new_recipe = new_recipe.slug
-        recipe_data = recipe_data = {
+        recipe_data = {
             "id": 1,
             "title": "Test Recipe",
             "slug": "test-recipe",
@@ -143,7 +143,6 @@ class TestRecipeUrls:
 
         api_client.force_authenticate(user=new_author)
         recipe_data["ingredients"][0]["unit"] = ["a" * 31]
-        print(recipe_data)
         assert (
             api_client.post("/api/v1/recipe/", recipe_data, format="json").status_code
             == 400
@@ -174,7 +173,6 @@ class TestRecipeUrls:
 
         api_client.force_authenticate(user=new_author)
         recipe_data["tag"] = ["a" * 101]
-        print(recipe_data)
         assert (
             api_client.post("/api/v1/recipe/", recipe_data, format="json").status_code
             == 400
