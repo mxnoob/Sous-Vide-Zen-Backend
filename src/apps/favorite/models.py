@@ -11,7 +11,9 @@ class Favorite(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    recipe = models.ForeignKey("recipes.Recipe", on_delete=models.CASCADE)
+    recipe = models.ForeignKey(
+        "recipes.Recipe", on_delete=models.CASCADE, related_name="favorite"
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

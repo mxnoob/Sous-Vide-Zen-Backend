@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 
-from django.db.models import Count, F, Q
+from django.db.models import Count, F, Q, Prefetch
 from django.utils.timezone import make_aware
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from config.settings import ACTIVITY_INTERVAL
+from src.apps.favorite.models import Favorite
 from src.apps.recipes.models import Recipe
 from src.base.paginators import FeedPagination
 from .filters import FeedFilter
@@ -50,31 +51,44 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "pub_date",
                 "tag__name",
                 "cooking_time",
+                "favorite",
             )
             .select_related("author")
-            .prefetch_related("tag", "category")
+            .prefetch_related(
+                "tag",
+                "category",
+                Prefetch(
+                    "favorite",
+                    queryset=Favorite.objects.filter(
+                        author=self.request.user
+                        if self.request.user.is_authenticated
+                        else None
+                    ),
+                    to_attr="user_favorites",
+                ),
+            )
             .annotate(
-                comments_count=Count(
+                latest_comments_count=Count(
                     "comments",
                     filter=Q(comments__pub_date__gte=last_month_start),
                     distinct=True,
                 ),
-                views_count=Count(
+                latest_views_count=Count(
                     "views",
                     filter=Q(views__created_at__gte=last_month_start),
                     distinct=True,
                 ),
-                reactions_count=Count(
+                latest_reactions_count=Count(
                     "reactions",
                     filter=Q(reactions__pub_date__gte=last_month_start),
                     distinct=True,
                 ),
-                total_comments_count=Count("comments", distinct=True),
-                total_views_count=Count("views", distinct=True),
-                total_reactions_count=Count("reactions", distinct=True),
-                activity_count=F("comments_count")
-                + F("views_count")
-                + F("reactions_count"),
+                comments_count=Count("comments", distinct=True),
+                views_count=Count("views", distinct=True),
+                reactions_count=Count("reactions", distinct=True),
+                activity_count=F("latest_comments_count")
+                + F("latest_views_count")
+                + F("latest_reactions_count"),
             )
         )
         return queryset

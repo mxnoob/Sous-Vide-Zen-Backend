@@ -37,6 +37,32 @@ class TestFeedResponseFields:
             )
         url = "/api/v1/feed/?ordering=-activity_count"
         response = api_client.get(url)
-        assert response.data["results"][0]["total_reactions_count"] == len(
-            EmojyChoice.values
+        assert response.data["results"][0]["reactions_count"] == len(EmojyChoice.values)
+
+    def test_is_favorite_field(
+        self,
+        new_user,
+        api_client,
+    ):
+        """
+        is_favorite is True when recipe is in user's favorite otherwise False
+        """
+
+        title = "Recipe 1"
+        full_text = "recipe 1 full text"
+
+        new_recipe = Recipe.objects.create(
+            author=new_user,
+            title=title,
+            full_text=full_text,
+            cooking_time=10,
         )
+        new_recipe.favorite.create(author=new_user, recipe=new_recipe)
+
+        url = "/api/v1/feed/?ordering=-activity_count"
+        response = api_client.get(url)
+        assert response.data["results"][0]["is_favorite"] == False
+
+        api_client.force_authenticate(user=new_user)
+        response = api_client.get(url)
+        assert response.data["results"][0]["is_favorite"] == True
