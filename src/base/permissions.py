@@ -17,9 +17,7 @@ class IsOwnerOrAdminOrReadOnly(BasePermission):
             return True
 
         if request.user.is_authenticated:
-            return obj == request.user or getattr(
-                request.user, "is_admin", False
-            )
+            return obj == request.user or getattr(request.user, "is_admin", False)
 
         return False
 

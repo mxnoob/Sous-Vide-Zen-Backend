@@ -20,7 +20,10 @@ from rest_framework.viewsets import GenericViewSet
 
 from src.apps.comments.models import Comment
 from src.base.paginators import CommentPagination
-from src.base.permissions import IsObjectOwnerOrAdminOrReadOnly, IsOwnerOrStaffOrReadOnly
+from src.base.permissions import (
+    IsObjectOwnerOrAdminOrReadOnly,
+    IsOwnerOrStaffOrReadOnly,
+)
 from src.base.services import get_or_none
 from src.apps.recipes.models import Recipe
 from .serializers import CommentListSerializer, CommentCreateSerializer
