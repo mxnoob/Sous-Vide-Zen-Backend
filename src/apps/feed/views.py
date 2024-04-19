@@ -44,14 +44,13 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "category",
                 "short_text",
                 "preview_image",
-                "author__id",
+                "author_id",
                 "author__username",
                 "author__display_name",
                 "author__avatar",
                 "pub_date",
                 "tag__name",
                 "cooking_time",
-                "favorite",
             )
             .select_related("author")
             .prefetch_related(
@@ -63,7 +62,7 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                         author=self.request.user
                         if self.request.user.is_authenticated
                         else None
-                    ),
+                    ).select_related("author"),
                     to_attr="user_favorites",
                 ),
             )
