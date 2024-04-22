@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
 
-from django.db.models import Count, F, Q
+from django.db.models import Count, F, Q, Prefetch
 from django.utils.timezone import make_aware
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from config.settings import ACTIVITY_INTERVAL
+from src.apps.favorite.models import Favorite
 from src.apps.recipes.models import Recipe
 from src.base.paginators import FeedPagination
 from .filters import FeedFilter
@@ -43,17 +44,28 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "category",
                 "short_text",
                 "preview_image",
-                "author__id",
+                "author_id",
                 "author__username",
                 "author__display_name",
                 "author__avatar",
                 "pub_date",
                 "tag__name",
                 "cooking_time",
-                "favorite",
             )
             .select_related("author")
-            .prefetch_related("tag", "category", "favorite")
+            .prefetch_related(
+                "tag",
+                "category",
+                Prefetch(
+                    "favorite",
+                    queryset=Favorite.objects.filter(
+                        author=self.request.user
+                        if self.request.user.is_authenticated
+                        else None
+                    ).select_related("author"),
+                    to_attr="user_favorites",
+                ),
+            )
             .annotate(
                 latest_comments_count=Count(
                     "comments",

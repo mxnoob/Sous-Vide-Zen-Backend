@@ -1,10 +1,10 @@
-from rest_framework.serializers import ModelSerializer, ChoiceField, RelatedField
+from rest_framework.serializers import ModelSerializer, ChoiceField
 
-from .choices import EmojyChoice
-from .models import Reaction
 from src.apps.comments.models import Comment
 from src.apps.recipes.models import Recipe
 from src.base.services import count_reactions_on_objects, show_user_reactions
+from .choices import EmojyChoice
+from .models import Reaction
 
 
 class RecipeReactionsListSerializer(ModelSerializer):
