@@ -57,6 +57,10 @@ class TestCommentModel:
         assert comment.pub_date <= timezone.now()
         assert isinstance(comment.pub_date, datetime.datetime)
 
+    def test_comment_updated_date(self, new_user, new_comment):
+        assert new_comment.updated_date <= timezone.now()
+        assert isinstance(new_comment.pub_date, datetime.datetime)
+
     def test_set_null_on_delete_recipe(self, new_user, new_recipe):
         # Проверяет, что при удалении рецепта связанный с ним комментарий
         # не удаляется, а его поле recipe устанавливается в null

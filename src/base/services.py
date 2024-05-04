@@ -199,6 +199,8 @@ def generate_username(user_id: int, model: Type[Model]) -> str:
 
 
 def count_reactions_on_objects(instance: Model) -> dict:
+    """Count reactions made on an object by their emoji"""
+
     reactions_queryset = (
         instance.reactions.values("emoji")
         .filter(is_deleted=False)
@@ -208,6 +210,8 @@ def count_reactions_on_objects(instance: Model) -> dict:
 
 
 def show_user_reactions(user: Model, instance: Model) -> list:
+    """Show reactions' emojies of the current user with reactions' id"""
+
     user_reactions = list()
     if user.is_authenticated:
         user_reactions_query = instance.reactions.filter(
@@ -221,3 +225,12 @@ def show_user_reactions(user: Model, instance: Model) -> list:
             for reaction in user_reactions_query
         ]
     return user_reactions
+
+
+def get_or_none(instance: Model, **kwargs):
+    """Return an object if exists or None if does not exist"""
+
+    try:
+        return instance.objects.get(**kwargs)
+    except instance.DoesNotExist:
+        return None

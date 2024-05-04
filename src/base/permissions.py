@@ -22,6 +22,28 @@ class IsOwnerOrAdminOrReadOnly(BasePermission):
         return False
 
 
+class IsObjectOwnerOrAdminOrReadOnly(BasePermission):
+    """
+    Permission to allow only the object author or administrator access to modify. .
+    Read access can be unauthorized
+    """
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Permission to allow only the object author or administrator access to modify. .
+        """
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_authenticated:
+            return obj.author == request.user or getattr(
+                request.user, "is_admin", False
+            )
+
+        return False
+
+
 class IsOwnerOrStaffOrReadOnly(BasePermission):
     """
     Permission to allow only the object owner or staff access to modify. .

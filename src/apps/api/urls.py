@@ -8,4 +8,5 @@ urlpatterns = [
     path("", include("src.apps.follow.urls")),
     path("", include("src.apps.recipes.urls")),
     path("", include("src.apps.reactions.urls")),
+    path("", include("src.apps.comments.urls")),
 ]
