@@ -5,6 +5,11 @@ from django.db import models
 class Favorite(models.Model):
     """
     Favorite model
+
+    Attrs:
+    • author (ForeignKey): author of favorite recipe.
+    • recipe (ForeignKey): recipe that has been added to favorite.
+    • pub_date (DateTimeField): date that recipe has been added to favorite.
     """
 
     author = models.ForeignKey(
