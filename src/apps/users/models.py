@@ -55,6 +55,24 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser, PermissionsMixin):
     """
     Custom user model.
+
+    Attrs:
+    • username (CharField): username of user.
+    • email (EmailField): email of user.
+    • phone (PhoneNumberField): phone number of user.
+    • pub_date (DateTimeField): date of publish comment.
+    • country (CharField(30)): country of user.
+    • city (CharField(30)): city of user.
+    • first_name (CharField(30)): user first name.
+    • last_name (CharField(30)): user last name.
+    • bio (CharField(200)): user bio.
+    • avatar (ImageField): user avatar.
+    • is_banned (BooleanField(default=False)): user is banned.
+    • is_active (BooleanField(default=True)): user is active.
+    • is_staff (BooleanField(default=False)): user is staff.
+    • is_admin (BooleanField(default=False)): user is admin.
+
+
     """
 
     objects = CustomUserManager()
