@@ -71,8 +71,6 @@ class CustomUser(AbstractUser, PermissionsMixin):
     • is_active (BooleanField(default=True)): user is active.
     • is_staff (BooleanField(default=False)): user is staff.
     • is_admin (BooleanField(default=False)): user is admin.
-
-
     """
 
     objects = CustomUserManager()
