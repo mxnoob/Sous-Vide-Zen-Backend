@@ -9,6 +9,16 @@ from .choices import EmojyChoice
 class Reaction(models.Model):
     """
     Reaction model
+
+    Attrs:
+    • author (ForeignKey): author of reaction.
+    • is_deleted (BooleanField):  reaction is deleted ?
+    • pub_date (DateTimeField): date of publish reaction.
+    • emoji (CharField(choices)): emoji of reaction.
+    • limit_models (Q): comment or recipe.
+    • content_type (ForeignKey): date of updating comment.
+    • object_id (PositiveIntegerField): id of object.
+    • reaction_object (GenericForeignKey(content_type, object_id)): object of reaction.
     """
 
     author = models.ForeignKey(
