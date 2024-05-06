@@ -11,6 +11,7 @@ class Follow(models.Model):
     • author (ForeignKey): who the user is following.
     • created_at (DateTimeField): subscription date.
     """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
