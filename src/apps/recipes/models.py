@@ -16,6 +16,23 @@ from src.base.services import recipe_preview_path, validate_avatar_size
 class Recipe(models.Model):
     """
     Recipe model
+
+    Attrs:
+    • author (ForeignKey): author of recipe.
+    • title (CharField(150)): title of recipe.
+    • slug (SlugField): slug of recipe.
+    • full_text (TextField): full text about recipe.
+    • short_text (CharField(200)): short text about recipe.
+    • preview_image (ImageField): preview image of ready-made dish.
+    • ingredients (ManyToManyField): ingredients of recipe.
+    • tag (TaggableManager): tag of recipe.
+    • category (ManyToManyField): category of recipe.
+    • cooking_time (PositiveIntegerField): time of cooking.
+    • pub_date (DateTimeField): recipe publication date.
+    • updated_at (DateTimeField): date of updating recipe.
+    • reactions (GenericRelation): reactions for recipe.
+    • is_repost (BooleanField): is repost. Default False.
+
     """
 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -66,6 +83,10 @@ class Recipe(models.Model):
 class Category(models.Model):
     """
     Category model
+
+    Attrs:
+    • name (CharField(100)): name of category.
+    • slug (SlugField): slug of category.
     """
 
     name = models.CharField(max_length=100, unique=True, blank=True)
