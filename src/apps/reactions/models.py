@@ -12,13 +12,14 @@ class Reaction(models.Model):
 
     Attrs:
     • author (ForeignKey): author of reaction.
-    • is_deleted (BooleanField):  reaction is deleted ?
-    • pub_date (DateTimeField): date of publish reaction.
+    • is_deleted (BooleanField): indicates whether reaction was deleted by it's author.
+    • pub_date (DateTimeField): reaction publication date.
     • emoji (CharField(choices)): emoji of reaction.
     • limit_models (Q): comment or recipe.
-    • content_type (ForeignKey): date of updating comment.
-    • object_id (PositiveIntegerField): id of object.
-    • reaction_object (GenericForeignKey(content_type, object_id)): object of reaction.
+    • content_type (ForeignKey): indicates a model of an object on which a reaction was made.
+    • object_id (PositiveIntegerField): id of an object on which a reaction was made.
+    • reaction_object (GenericForeignKey(content_type, object_id)):
+    indicates an object on which a reaction was made.
     """
 
     author = models.ForeignKey(
