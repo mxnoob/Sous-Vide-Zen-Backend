@@ -39,9 +39,9 @@ class IngredientInRecipe(models.Model):
 
     Attrs:
     • ingredient (ForeignKey): ingredient in recipe.
-    • recipe (ForeignKey): recipe of ingredient.
+    • recipe (ForeignKey):  recipe, in which an ingredient is added.
     • unit (ForeignKey): unit of ingredient in recipe.
-    • amount (PositiveIntegerField): amount of ingredients.
+    • amount (PositiveIntegerField): amount of an ingredient.
     """
 
     ingredient = models.ForeignKey(
