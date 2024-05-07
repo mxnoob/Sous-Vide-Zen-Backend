@@ -21,17 +21,17 @@ class Recipe(models.Model):
     • author (ForeignKey): author of recipe.
     • title (CharField(150)): title of recipe.
     • slug (SlugField): slug of recipe.
-    • full_text (TextField): full text about recipe.
-    • short_text (CharField(200)): short text about recipe.
+    • full_text (TextField): recipe's full text.
+    • short_text (CharField(200)): recipe's short text.
     • preview_image (ImageField): preview image of ready-made dish.
     • ingredients (ManyToManyField): ingredients of recipe.
     • tag (TaggableManager): tag of recipe.
     • category (ManyToManyField): category of recipe.
     • cooking_time (PositiveIntegerField): time of cooking.
     • pub_date (DateTimeField): recipe publication date.
-    • updated_at (DateTimeField): date of updating recipe.
-    • reactions (GenericRelation): reactions for recipe.
-    • is_repost (BooleanField): is repost. Default False.
+    • updated_at (DateTimeField): recipe updated date.
+    • reactions (GenericRelation): reactions on a recipe.
+    • is_repost (BooleanField): indicates whether recipe was reposted. Default False.
 
     """
 
