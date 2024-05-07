@@ -8,7 +8,7 @@ class Favorite(models.Model):
 
     Attrs:
     • author (ForeignKey): author of favorite recipe.
-    • recipe (ForeignKey): recipe that has been added to favorite.
+    • recipe (ForeignKey): recipe that has been added to favorites.
     • pub_date (DateTimeField): date that recipe has been added to favorite.
     """
 
