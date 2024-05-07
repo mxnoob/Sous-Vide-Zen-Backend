@@ -11,13 +11,13 @@ class Comment(models.Model):
     Comment model
 
     Attrs:
-        • author (ForeignKey): author of comment.
-        • recipe (ForeignKey): recipe of comment.
-        • text (TextField): text of comment.
-        • pub_date (DateTimeField): date of publish comment.
-        • parent (ForeignKey): answer for comment.
-        • reactions (GenericRelation): reaction for comment.
-        • updated_date (DateTimeField): date of updating comment.
+        • author (ForeignKey): author of a comment.
+        • recipe (ForeignKey): recipe, on which a comment was made.
+        • text (TextField): text of a comment.
+        • pub_date (DateTimeField): comment publication date.
+        • parent (ForeignKey): initial comment, on which a comment was made.
+        • reactions (GenericRelation): reaction for a comment.
+        • updated_date (DateTimeField): comment update date.
     """
 
     author = models.ForeignKey(
