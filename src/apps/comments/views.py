@@ -18,7 +18,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from base.code_text import (
+from src.base.code_text import (
     INVALID_ID_FORMAT,
     COMMENT_NOT_FOUND,
     COMMENT_SUCCESSFULLY_DELETE,

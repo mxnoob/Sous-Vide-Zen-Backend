@@ -11,7 +11,7 @@ from rest_framework.status import (
 )
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from base.code_text import (
+from src.base.code_text import (
     USER_DOES_NOT_EXISTS,
     AUTHOR_IS_MISSING,
     AUTHOR_NOT_FOUND,

@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from base.code_text import (
+from src.base.code_text import (
     REACTION_ALREADY_SET,
     SUCCESSFUL_RATED_IT,
     SUCCESSFUL_LIKED_THE_RECIPE,

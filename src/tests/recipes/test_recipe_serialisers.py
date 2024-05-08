@@ -4,20 +4,21 @@ from datetime import timedelta
 import pytest
 from django.utils import timezone
 
+from src.base.code_text import CANT_EDIT_COMMENT
 from src.apps.recipes.serializers import RecipeRetriveSerializer
 
 
 @pytest.mark.django_db
 @pytest.mark.api
-class TestRecipeSerialisers:
+class TestRecipeSerializers:
     """
-    Test Recipe Serializers:
+    TestRecipeSerializers:
     RecipeRetriveSerializer
     RecipeCreateSerializer
     RecipeUpdateSerializer
     """
 
-    def test_retrive_recipe_serializer(self, request, new_recipe, new_user):
+    def test_retrieve_recipe_serializer(self, request, new_recipe, new_user):
         """
         Test for retrive recipe
         [GET] http://127.0.0.1:8000/api/v1/recipe/{slug}/
@@ -192,6 +193,4 @@ class TestRecipeSerialisers:
 
         response = api_client.patch(url, data=update_data, format="json")
         assert response.status_code == 403
-        assert response.data == {
-            "detail": "Обновление рецепта возможно только в течение суток после создания."
-        }
+        assert response.data == CANT_EDIT_COMMENT

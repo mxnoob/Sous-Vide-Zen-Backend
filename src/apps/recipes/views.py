@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from base.code_text import (
+from src.base.code_text import (
     RECIPE_SUCCESSFUL_DELETE,
     RECIPE_ALREADY_IN_FAVORITES,
     SUCCESSFUL_ADDED_TO_FAVORITES,
