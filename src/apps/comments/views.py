@@ -18,6 +18,11 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from base.code_text import (
+    INVALID_ID_FORMAT,
+    COMMENT_NOT_FOUND,
+    COMMENT_SUCCESSFULLY_DELETE, CANT_EDIT_COMMENT,
+)
 from src.apps.comments.models import Comment
 from src.base.paginators import CommentPagination
 from src.base.permissions import (
@@ -78,8 +83,8 @@ class CommentViewSet(
             try:
                 int(self.kwargs.get("pk"))
             except ValueError:
-                raise ValidationError({"detail": "Неверный формат id"})
-            raise NotFound({"detail": "Комментарий не найден."})
+                raise ValidationError(INVALID_ID_FORMAT)
+            raise NotFound(COMMENT_NOT_FOUND)
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -115,11 +120,10 @@ class CommentViewSet(
         """
         Updating a comment
         """
-
         comment = self.get_object()
         if timezone.now() - comment.pub_date > timedelta(days=1):
             raise PermissionDenied(
-                "Обновление комментария возможно только в течение суток после создания."
+                CANT_EDIT_COMMENT
             )
 
         super().update(request, *args, **kwargs)
@@ -133,6 +137,4 @@ class CommentViewSet(
         """
 
         self.get_object().delete()
-        return Response(
-            {"message": "Комментарий удален!"}, status=status.HTTP_204_NO_CONTENT
-        )
+        return Response(COMMENT_SUCCESSFULLY_DELETE, status=status.HTTP_204_NO_CONTENT)
