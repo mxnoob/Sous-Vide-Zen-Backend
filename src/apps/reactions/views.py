@@ -12,6 +12,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from base.code_text import (REACTION_ALREADY_SET, SUCCESSFUL_RATED_IT, \
+                            SUCCESSFUL_LIKED_THE_RECIPE, REACTION_CANCELLED,
+                            ALREADY_RATED_THIS_COMMENT, SUCCESSFUL_RATED_COMMENT)
 from src.base.throttling import ScopedOnePerThreeSecsThrottle
 from src.apps.reactions.models import Reaction
 from src.apps.reactions.serializers import (
@@ -83,7 +86,7 @@ class ReactionViewSet(
 
         if not created and not reaction.is_deleted:
             return Response(
-                {"detail": "Вы уже поставили такую реакцию"},
+                REACTION_ALREADY_SET,
                 status=status.HTTP_403_FORBIDDEN,
             )
         if reaction.is_deleted:
@@ -91,7 +94,7 @@ class ReactionViewSet(
             reaction.save()
 
         return Response(
-            {"message": "Вы поставили оценку!"}, status=status.HTTP_201_CREATED
+            SUCCESSFUL_RATED_IT, status=status.HTTP_201_CREATED
         )
 
 
@@ -103,12 +106,12 @@ class RecipeReactionViewSet(ReactionViewSet):
         response = super().create(self, request, *args, **kwargs)
         if response.status_code == status.HTTP_403_FORBIDDEN:
             return Response(
-                {"detail": "Вы уже поставили такую реакцию к данному рецепту"},
+                REACTION_ALREADY_SET,
                 status=status.HTTP_403_FORBIDDEN,
             )
 
         return Response(
-            {"message": "Вы оценили рецепт!"}, status=status.HTTP_201_CREATED
+            SUCCESSFUL_LIKED_THE_RECIPE, status=status.HTTP_201_CREATED
         )
 
     def destroy(self, request, *args, **kwargs):
@@ -121,7 +124,7 @@ class RecipeReactionViewSet(ReactionViewSet):
         reaction.is_deleted = True
         reaction.save()
         return Response(
-            {"message": "Реакция отменена!"}, status=status.HTTP_204_NO_CONTENT
+            REACTION_CANCELLED, status=status.HTTP_204_NO_CONTENT
         )
 
 
@@ -132,12 +135,12 @@ class CommentReactionViewSet(ReactionViewSet):
         response = super().create(self, request, *args, **kwargs)
         if response.status_code == status.HTTP_403_FORBIDDEN:
             return Response(
-                {"detail": "Вы уже оценили данный комментарий"},
+                ALREADY_RATED_THIS_COMMENT,
                 status=status.HTTP_403_FORBIDDEN,
             )
 
         return Response(
-            {"message": "Вы оценили комментарий!"}, status=status.HTTP_201_CREATED
+            SUCCESSFUL_RATED_COMMENT, status=status.HTTP_201_CREATED
         )
 
     def destroy(self, request, *args, **kwargs):
@@ -150,5 +153,5 @@ class CommentReactionViewSet(ReactionViewSet):
         reaction.is_deleted = True
         reaction.save()
         return Response(
-            {"message": "Реакция отменена!"}, status=status.HTTP_204_NO_CONTENT
+            REACTION_CANCELLED, status=status.HTTP_204_NO_CONTENT
         )
