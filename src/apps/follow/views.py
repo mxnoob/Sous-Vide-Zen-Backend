@@ -11,9 +11,14 @@ from rest_framework.status import (
 )
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from base.code_text import (USER_DOES_NOT_EXISTS, AUTHOR_IS_MISSING, AUTHOR_NOT_FOUND, \
-                            SUCCESSFUL_ATTEMPT_ON_AUTHOR, NOT_FOLLOWING_THIS_USER, \
-                            SUCCESSFUL_UNSUBSCRIBE_FROM_THE_AUTHOR)
+from base.code_text import (
+    USER_DOES_NOT_EXISTS,
+    AUTHOR_IS_MISSING,
+    AUTHOR_NOT_FOUND,
+    SUCCESSFUL_ATTEMPT_ON_AUTHOR,
+    NOT_FOLLOWING_THIS_USER,
+    SUCCESSFUL_UNSUBSCRIBE_FROM_THE_AUTHOR,
+)
 from src.apps.follow.models import Follow
 from src.apps.follow.serializers import (
     FollowListSerializer,
@@ -93,14 +98,10 @@ class SubscribeViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         author = request.data.get("author")
         if not author:
-            return Response(
-                data=AUTHOR_IS_MISSING, status=HTTP_400_BAD_REQUEST
-            )
+            return Response(data=AUTHOR_IS_MISSING, status=HTTP_400_BAD_REQUEST)
 
         if not CustomUser.objects.filter(username=request.data.get("author")).exists():
-            return Response(
-                data=AUTHOR_NOT_FOUND, status=HTTP_404_NOT_FOUND
-            )
+            return Response(data=AUTHOR_NOT_FOUND, status=HTTP_404_NOT_FOUND)
         super().create(request, *args, **kwargs)
 
         return Response(
