@@ -21,7 +21,8 @@ from rest_framework.viewsets import GenericViewSet
 from base.code_text import (
     INVALID_ID_FORMAT,
     COMMENT_NOT_FOUND,
-    COMMENT_SUCCESSFULLY_DELETE, CANT_EDIT_COMMENT,
+    COMMENT_SUCCESSFULLY_DELETE,
+    CANT_EDIT_COMMENT,
 )
 from src.apps.comments.models import Comment
 from src.base.paginators import CommentPagination
@@ -122,9 +123,7 @@ class CommentViewSet(
         """
         comment = self.get_object()
         if timezone.now() - comment.pub_date > timedelta(days=1):
-            raise PermissionDenied(
-                CANT_EDIT_COMMENT
-            )
+            raise PermissionDenied(CANT_EDIT_COMMENT)
 
         super().update(request, *args, **kwargs)
         comment.refresh_from_db()
