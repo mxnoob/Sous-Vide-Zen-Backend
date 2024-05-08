@@ -2,6 +2,8 @@
 INVALID_ID_FORMAT: dict = {"detail": "Неверный формат id."}
 COMMENT_NOT_FOUND: dict = {"detail": "Комментарий не найден."}
 COMMENT_SUCCESSFULLY_DELETE: dict = {"message": "Комментарий удален!"}
+CANT_EDIT_COMMENT: dict =\
+    "Обновление комментария возможно только в течение суток после создания."
 
 # User status
 USER_DOES_NOT_EXISTS: dict = {"detail": "Пользователь не существует."}
