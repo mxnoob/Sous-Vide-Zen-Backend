@@ -8,7 +8,16 @@ from src.apps.reactions.models import Reaction
 
 class Comment(models.Model):
     """
-    Comments model
+    Comment model
+
+    Attrs:
+        • author (ForeignKey): author of a comment.
+        • recipe (ForeignKey): recipe, on which a comment was made.
+        • text (TextField): text of a comment.
+        • pub_date (DateTimeField): comment publication date.
+        • parent (ForeignKey): initial comment, on which a comment was made.
+        • reactions (GenericRelation): reaction for a comment.
+        • updated_date (DateTimeField): comment update date.
     """
 
     author = models.ForeignKey(

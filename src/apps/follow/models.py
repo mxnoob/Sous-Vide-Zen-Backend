@@ -3,6 +3,15 @@ from django.db import models
 
 
 class Follow(models.Model):
+    """
+    Follow model
+
+    Attrs:
+    • user (ForeignKey): subscribed user.
+    • author (ForeignKey): who the user is following.
+    • created_at (DateTimeField): subscription date.
+    """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
