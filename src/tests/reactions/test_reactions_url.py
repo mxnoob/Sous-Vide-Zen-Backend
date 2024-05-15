@@ -7,8 +7,8 @@ from src.base.code_text import (
     CREDENTIALS_WERE_NOT_PROVIDED,
     PAGE_NOT_FOUND,
     REACTION_CANCELLED,
-    SUCCESSFUL_APPRECIATED_COMMENT,
-)
+    SUCCESSFUL_APPRECIATED_COMMENT, ALREADY_RATED_THIS_COMMENT,
+    )
 from src.apps.reactions.choices import EmojyChoice
 from src.apps.reactions.models import Reaction
 
@@ -127,7 +127,7 @@ class TestCommentReactionsUrl:
         assert response_default.data == SUCCESSFUL_APPRECIATED_COMMENT
         assert new_comment.reactions.values("emoji")[0]["emoji"] == EmojyChoice.LIKE
         assert response_duplicate.status_code == 403
-        assert response_duplicate.data == SUCCESSFUL_APPRECIATED_COMMENT
+        assert response_duplicate.data == ALREADY_RATED_THIS_COMMENT
 
     def test_comment_reaction_create_non_authorized(
         self, api_client, new_user, new_comment

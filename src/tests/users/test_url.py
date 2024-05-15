@@ -1,6 +1,9 @@
 import pytest
 
-from src.base.code_text import CREDENTIALS_WERE_NOT_PROVIDED, DONT_HAVE_PERMISSIONS
+from src.base.code_text import (
+    CREDENTIALS_WERE_NOT_PROVIDED,
+    DONT_HAVE_PERMISSIONS,
+    )
 
 BASE_URL = "http://127.0.0.1:8000/api/v1"
 
@@ -43,7 +46,7 @@ class TestUserAPI:
 
         response = api_client.get(f"{BASE_URL}/auth/users/me/")
         assert response.status_code == 401
-        assert response.json()["detail"] == CREDENTIALS_WERE_NOT_PROVIDED
+        assert response.json() == CREDENTIALS_WERE_NOT_PROVIDED
 
     def test_get_user(self, api_client, create_token, new_author):
         """
@@ -103,7 +106,9 @@ class TestUserAPI:
         """
 
         data = {"display_name": "new Display Name"}
-        response = api_client.patch(f"{BASE_URL}/user/{new_user.username}/", data=data)
+        response = api_client.patch(
+            f"{BASE_URL}/user/{new_user.username}/", data=data
+            )
         assert response.status_code == 401
         assert response.data == CREDENTIALS_WERE_NOT_PROVIDED
 
@@ -176,8 +181,8 @@ class TestCreateUser:
     """
 
     def test_custom_user_create_password_retyped(
-        self, api_client, create_token, new_author
-    ):
+            self, api_client, create_token, new_author
+            ):
         """
         User Serializers Test
         http://127.0.0.1:8000/api/v1/auth/users/
@@ -193,13 +198,13 @@ class TestCreateUser:
         response = api_client.post(url, data=data)
 
         assert (
-            response.status_code == 201
+                response.status_code == 201
         ), f"Expected status code 201, but got {response.status_code}"
         assert response.data["username"] == f"user{response.data['id']}"
 
     def test_custom_user_create_password_non_retyped(
-        self, api_client, create_token, new_author
-    ):
+            self, api_client, create_token, new_author
+            ):
         """
         User Serializers Test
         http://127.0.0.1:8000/api/v1/auth/users/
@@ -214,13 +219,13 @@ class TestCreateUser:
         response = api_client.post(url, data=data)
 
         assert (
-            response.status_code == 400
+                response.status_code == 400
         ), f"Expected status code 400, but got {response.status_code}"
         assert response.data["password2"][0] == "Обязательное поле."
 
     def test_custom_user_create_password_retyped_different_password(
-        self, api_client, create_token, new_author
-    ):
+            self, api_client, create_token, new_author
+            ):
         """
         User Serializers Test
         http://127.0.0.1:8000/api/v1/auth/users/
@@ -236,6 +241,6 @@ class TestCreateUser:
         response = api_client.post(url, data=data)
 
         assert (
-            response.status_code == 400
+                response.status_code == 400
         ), f"Expected status code 400, but got {response.status_code}"
         assert response.data["password"][0] == "Пароли не совпадают!"

@@ -7,13 +7,13 @@ from rest_framework.exceptions import (
     NotAuthenticated,
     ValidationError,
     NotFound,
-)
+    )
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
-)
+    )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -23,13 +23,13 @@ from src.base.code_text import (
     COMMENT_NOT_FOUND,
     COMMENT_SUCCESSFULLY_DELETE,
     CANT_EDIT_COMMENT,
-)
+    )
 from src.apps.comments.models import Comment
 from src.base.paginators import CommentPagination
 from src.base.permissions import (
     IsObjectOwnerOrAdminOrReadOnly,
     IsOwnerOrStaffOrReadOnly,
-)
+    )
 from src.base.services import get_or_none
 from src.apps.recipes.models import Recipe
 from .serializers import CommentListSerializer, CommentCreateSerializer
@@ -41,7 +41,7 @@ class CommentViewSet(
     CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
-):
+    ):
     """
     Base class for getting, creating, updating and deleting comments
     """
@@ -65,7 +65,7 @@ class CommentViewSet(
             "POST": (IsAuthenticatedOrReadOnly,),
             "PUT": (IsObjectOwnerOrAdminOrReadOnly,),
             "DELETE": (IsOwnerOrStaffOrReadOnly,),
-        }
+            }
         self.permission_classes = permission_classes.get(self.request.method)
 
         return super(CommentViewSet, self).get_permissions()
@@ -99,7 +99,8 @@ class CommentViewSet(
         """Creating a comment.
         Comment can be posted on a recipe (indicated by slug in url).
 
-        Comment can be posted on another comment (if "parent" indicated in the serializer).
+        Comment can be posted on another comment (if "parent" indicated in
+        the serializer).
         """
 
         recipe = get_object_or_404(Recipe, slug=kwargs.get("slug"))
@@ -112,7 +113,7 @@ class CommentViewSet(
             recipe=recipe,
             parent=parent,
             text=serializer.data["text"],
-        )
+            )
         serializer = CommentListSerializer(comment)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -123,7 +124,7 @@ class CommentViewSet(
         """
         comment = self.get_object()
         if timezone.now() - comment.pub_date > timedelta(days=1):
-            raise PermissionDenied(CANT_EDIT_COMMENT)
+            raise PermissionDenied(CANT_EDIT_COMMENT, code='permission_denied')
 
         super().update(request, *args, **kwargs)
         comment.refresh_from_db()
@@ -136,4 +137,6 @@ class CommentViewSet(
         """
 
         self.get_object().delete()
-        return Response(COMMENT_SUCCESSFULLY_DELETE, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            COMMENT_SUCCESSFULLY_DELETE, status=status.HTTP_204_NO_CONTENT
+            )
