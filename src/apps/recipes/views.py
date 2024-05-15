@@ -8,7 +8,7 @@ from rest_framework.mixins import (
     CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
-    )
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -21,7 +21,7 @@ from src.base.code_text import (
     THE_RECIPE_IS_NOT_IN_FAVORITES,
     RECIPE_REMOVED_FROM_FAVORITES,
     THE_LIST_OF_CHOOSE_FAVORITES_RECIPES_IS_EMPTY,
-    )
+)
 from src.apps.favorite.models import Favorite
 from src.apps.view.models import ViewRecipes
 from src.base.paginators import FeedPagination
@@ -33,7 +33,7 @@ from .serializers import (
     RecipeCreateSerializer,
     RecipeUpdateSerializer,
     BaseRecipeListSerializer,
-    )
+)
 
 
 class RecipeViewSet(
@@ -42,7 +42,7 @@ class RecipeViewSet(
     CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin,
-    ):
+):
     filter_backends = (SearchFilter,)
     search_fields = ("title",)
     lookup_field = "slug"
@@ -58,20 +58,18 @@ class RecipeViewSet(
                     reactions_count=Count("reactions", distinct=True),
                     views_count=Count("views", distinct=True),
                     comments_count=Count("comments", distinct=True),
-                    )
+                )
             )
             return queryset
         slug = self.kwargs.get("slug")
         queryset = (
             Recipe.objects.filter(slug=slug)
             .select_related("author")
-            .prefetch_related(
-                "ingredients", "category", "tag", "reactions", "views"
-                )
+            .prefetch_related("ingredients", "category", "tag", "reactions", "views")
             .annotate(
                 reactions_count=Count("reactions", distinct=True),
                 views_count=Count("views", distinct=True),
-                )
+            )
         )
         return queryset
 
@@ -87,7 +85,7 @@ class RecipeViewSet(
             "GET": RecipeRetriveSerializer,
             "POST": RecipeCreateSerializer,
             "PATCH": RecipeUpdateSerializer,
-            }
+        }
         self.serializer_class = serializer_classes.get(self.request.method)
 
         return super(RecipeViewSet, self).get_serializer_class()
@@ -102,17 +100,15 @@ class RecipeViewSet(
     def destroy(self, request, *args, **kwargs):
         """Delete recipe"""
         self.get_object().delete()
-        return Response(
-            RECIPE_SUCCESSFUL_DELETE, status=status.HTTP_204_NO_CONTENT
-            )
+        return Response(RECIPE_SUCCESSFUL_DELETE, status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,
         methods=[
             "get",
-            ],
+        ],
         pagination_class=FeedPagination,
-        )
+    )
     def favorites(self, request):
         """Getting a list of favorite user's recipes with pagination."""
 
@@ -130,35 +126,31 @@ class RecipeViewSet(
         recipe = get_object_or_404(Recipe, slug=slug)
         favorite_recipe, created = Favorite.objects.get_or_create(
             author=request.user, recipe=recipe
-            )
+        )
         if not created:
             return Response(
                 RECIPE_ALREADY_IN_FAVORITES,
                 status=status.HTTP_400_BAD_REQUEST,
-                )
-        return Response(
-            SUCCESSFUL_ADDED_TO_FAVORITES, status=status.HTTP_201_CREATED
             )
+        return Response(SUCCESSFUL_ADDED_TO_FAVORITES, status=status.HTTP_201_CREATED)
 
     def remove_from_favorites(self, request, slug):
         if not request.user.is_authenticated:
             return Response(
                 data=CREDENTIALS_WERE_NOT_PROVIDED,
                 status=status.HTTP_401_UNAUTHORIZED,
-                )
-        recipe = get_object_or_404(Recipe, slug=slug)
-        favorite_recipe = Favorite.objects.filter(
-            author=request.user, recipe=recipe
             )
+        recipe = get_object_or_404(Recipe, slug=slug)
+        favorite_recipe = Favorite.objects.filter(author=request.user, recipe=recipe)
 
         if not favorite_recipe.exists():
             return Response(
                 data=THE_RECIPE_IS_NOT_IN_FAVORITES,
                 status=status.HTTP_400_BAD_REQUEST,
-                )
+            )
 
         favorite_recipe.delete()
         return Response(
             status=status.HTTP_204_NO_CONTENT,
             data=RECIPE_REMOVED_FROM_FAVORITES,
-            )
+        )

@@ -83,7 +83,7 @@ def create_ingredients_in_recipe(
 
     ingredient_names: List[str] = [data["name"] for data in ingredients_data]
     if len(ingredient_names) != len(set(ingredient_names)):
-        raise ValidationError(CANT_ADD_TWO_SIMILAR_INGREDIENT, code='invalid')
+        raise ValidationError(CANT_ADD_TWO_SIMILAR_INGREDIENT, code="invalid")
 
     existing_ingredients: List[IngredientInRecipe] = IngredientInRecipe.objects.filter(
         recipe=recipe

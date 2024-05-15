@@ -7,8 +7,9 @@ from src.base.code_text import (
     CREDENTIALS_WERE_NOT_PROVIDED,
     PAGE_NOT_FOUND,
     REACTION_CANCELLED,
-    SUCCESSFUL_APPRECIATED_COMMENT, ALREADY_RATED_THIS_COMMENT,
-    )
+    SUCCESSFUL_APPRECIATED_COMMENT,
+    ALREADY_RATED_THIS_COMMENT,
+)
 from src.apps.reactions.choices import EmojyChoice
 from src.apps.reactions.models import Reaction
 
