@@ -15,8 +15,9 @@ class FavoriteAdmin(admin.ModelAdmin):
     navigate to this object.
     • readonly_fields (list[str]): list of fields that you cant edit.
     """
-    list_display = ['id', 'recipe', 'author', 'pub_date']
-    list_filter = ['pub_date', 'author']
-    search_fields = ['recipe']
-    list_display_links = ['id', 'recipe']
-    readonly_fields = ['pub_date']
+
+    list_display = ["id", "recipe", "author", "pub_date"]
+    list_filter = ["pub_date", "author"]
+    search_fields = ["recipe"]
+    list_display_links = ["id", "recipe"]
+    readonly_fields = ["pub_date"]
