@@ -13,6 +13,7 @@ from config.settings import SHORT_RECIPE_SYMBOLS
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
+from src.base.code_text import RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY
 from src.base.services import (
     shorten_text,
     create_ingredients_in_recipe,
@@ -54,7 +55,10 @@ class TagSerializer(TagListSerializerField):
 
     def to_representation(self, value):
         """
-        Convert the input value to its representation. If the input value is not an instance of TagList, it is converted to a list of dictionaries containing the name and slug of each tag. If the input value is already an instance of TagList, it is returned as is.
+        Convert the input value to its representation. If the input value is
+        not an instance of TagList, it is converted to a list of dictionaries
+        containing the name and slug of each tag. If the input value is
+        already an instance of TagList, it is returned as is.
 
         Parameters:
         - value: The input value to be converted
@@ -207,7 +211,7 @@ class RecipeUpdateSerializer(BaseRecipeSerializer):
         """
         if timezone.now() - instance.pub_date > timedelta(days=1):
             raise PermissionDenied(
-                "Обновление рецепта возможно только в течение суток после создания."
+                RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY, code="permission denied"
             )
 
         tags_data = validated_data.pop("tag", [])
