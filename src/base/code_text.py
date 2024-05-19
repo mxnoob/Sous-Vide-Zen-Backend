@@ -13,7 +13,7 @@ COMMENT_NOT_FOUND: dict = {"detail": "Комментарий не найден."
 COMMENT_SUCCESSFULLY_DELETE: dict = {"message": "Комментарий удален!"}
 CANT_EDIT_COMMENT: dict = {
     "detail": "Обновление комментария возможно только в течение суток после "
-              "создания."
+    "создания."
 }
 
 SUCCESSFUL_APPRECIATED_COMMENT: dict = {"message": "Вы оценили комментарий!"}
