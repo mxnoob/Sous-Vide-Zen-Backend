@@ -1,5 +1,5 @@
 # Base
-PAGE_NOT_FOUND = {"detail": "Страница не найдена."}
+PAGE_NOT_FOUND: dict = {"detail": "Страница не найдена."}
 CREDENTIALS_WERE_NOT_PROVIDED: dict = {
     "detail": "Учетные данные не были предоставлены."
 }
@@ -13,13 +13,14 @@ COMMENT_NOT_FOUND: dict = {"detail": "Комментарий не найден."
 COMMENT_SUCCESSFULLY_DELETE: dict = {"message": "Комментарий удален!"}
 CANT_EDIT_COMMENT: dict = {
     "detail": "Обновление комментария возможно только в течение суток после "
-    "создания."
+              "создания."
 }
 
 SUCCESSFUL_APPRECIATED_COMMENT: dict = {"message": "Вы оценили комментарий!"}
 
 # User status
 USER_DOES_NOT_EXISTS: dict = {"detail": "Пользователь не существует."}
+PASSWORDS_IS_NOT_SIMILAR: dict = {"password": "Пароли не совпадают!"}
 
 # Author status
 AUTHOR_IS_MISSING: dict = {"message": "Отсутствует автор."}
