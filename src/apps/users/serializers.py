@@ -25,7 +25,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         validate_password(attrs["password"])
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError(
-                PASSWORDS_ARE_NOT_SIMILAR, code="passwords are not similar"
+                PASSWORDS_ARE_NOT_SIMILAR, code="passwords_are_not_similar"
             )
         del attrs["password2"]
 
