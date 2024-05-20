@@ -12,7 +12,7 @@ from rest_framework.status import (
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from src.base.code_text import (
-    USER_DOES_NOT_EXISTS,
+    USER_DOES_NOT_EXIST,
     AUTHOR_IS_MISSING,
     AUTHOR_NOT_FOUND,
     SUCCESSFUL_ATTEMPT_ON_AUTHOR,
@@ -48,7 +48,7 @@ class FollowViewSet(GenericViewSet, ListModelMixin):
         username = kwargs.get("username")
         if not CustomUser.objects.filter(username=username).exists():
             return Response(
-                data=USER_DOES_NOT_EXISTS,
+                data=USER_DOES_NOT_EXIST,
                 status=HTTP_404_NOT_FOUND,
             )
         queryset = self.get_queryset()
@@ -76,7 +76,7 @@ class FollowerViewSet(GenericViewSet, ListModelMixin):
         username = kwargs.get("username")
         if not CustomUser.objects.filter(username=username).exists():
             return Response(
-                data=USER_DOES_NOT_EXISTS,
+                data=USER_DOES_NOT_EXIST,
                 status=HTTP_404_NOT_FOUND,
             )
         queryset = self.get_queryset()

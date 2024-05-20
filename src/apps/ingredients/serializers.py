@@ -28,6 +28,6 @@ class IngredientInRecipeSerializer(ModelSerializer):
 
         if value <= 0:
             raise serializers.ValidationError(
-                AMOUNT_OF_INGREDIENT_LESS_THAN_ZERO, code="invalid"
+                AMOUNT_OF_INGREDIENT_LESS_THAN_ZERO, code="amount_less_than_zero"
             )
         return value

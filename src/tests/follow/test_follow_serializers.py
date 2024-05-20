@@ -3,7 +3,7 @@ import pytest
 from factory.django import DjangoModelFactory
 
 from src.base.code_text import (
-    USER_DOES_NOT_EXISTS,
+    USER_DOES_NOT_EXIST,
     CREDENTIALS_WERE_NOT_PROVIDED,
     ALREADY_SUBSCRIBED_TO_THIS_AUTHOR,
     AUTHOR_NOT_FOUND,
@@ -62,7 +62,7 @@ class TestFollowSerializers:
         api_client.force_authenticate(user=new_user)
         response = api_client.get(url)
         assert response.status_code == 404
-        assert response.data == USER_DOES_NOT_EXISTS
+        assert response.data == USER_DOES_NOT_EXIST
 
     def test_follower_list_serializer(self, api_client, new_user, new_author):
         """
@@ -92,7 +92,7 @@ class TestFollowSerializers:
         api_client.force_authenticate(user=new_user)
         response = api_client.get(url)
         assert response.status_code == 404
-        assert response.data == USER_DOES_NOT_EXISTS
+        assert response.data == USER_DOES_NOT_EXIST
 
     def test_follow_create_serializer(self, api_client, new_user, new_author):
         """

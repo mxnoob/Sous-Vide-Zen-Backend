@@ -19,8 +19,8 @@ CANT_EDIT_COMMENT: dict = {
 SUCCESSFUL_APPRECIATED_COMMENT: dict = {"message": "Вы оценили комментарий!"}
 
 # User status
-USER_DOES_NOT_EXISTS: dict = {"detail": "Пользователь не существует."}
-PASSWORDS_IS_NOT_SIMILAR: dict = {"password": "Пароли не совпадают!"}
+USER_DOES_NOT_EXIST: dict = {"detail": "Пользователь не существует."}
+PASSWORDS_ARE_NOT_SIMILAR: dict = {"password": "Пароли не совпадают!"}
 
 # Author status
 AUTHOR_IS_MISSING: dict = {"message": "Отсутствует автор."}
@@ -49,10 +49,7 @@ RECIPE_ALREADY_IN_FAVORITES: dict = {"detail": "Рецепт уже находи
 SUCCESSFUL_ADDED_TO_FAVORITES: dict = {"detail": "Рецепт добавлен в избранное."}
 THE_RECIPE_IS_NOT_IN_FAVORITES: dict = {"detail": "Рецепт не находится в избранном."}
 RECIPE_REMOVED_FROM_FAVORITES: dict = {"detail": "Рецепт удален из избранного."}
-THE_LIST_OF_FAVORITES_RECIPES_IS_EMPTY: dict = {
-    "detail": "Список избранных рецептов пуст."
-}
-RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY: dict = {
+RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY: dict = {
     "detail": "Обновление рецепта возможно только в течение суток после создания."
 }
 AMOUNT_OF_INGREDIENT_LESS_THAN_ZERO: str = "Количество должно быть больше 0"

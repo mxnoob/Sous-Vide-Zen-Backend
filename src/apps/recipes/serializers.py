@@ -13,7 +13,7 @@ from config.settings import SHORT_RECIPE_SYMBOLS
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
-from src.base.code_text import RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY
+from src.base.code_text import RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY
 from src.base.services import (
     shorten_text,
     create_ingredients_in_recipe,
@@ -211,7 +211,7 @@ class RecipeUpdateSerializer(BaseRecipeSerializer):
         """
         if timezone.now() - instance.pub_date > timedelta(days=1):
             raise PermissionDenied(
-                RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY, code="permission denied"
+                RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY, code="restriction_per_day"
             )
 
         tags_data = validated_data.pop("tag", [])

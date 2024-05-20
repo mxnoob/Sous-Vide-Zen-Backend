@@ -5,7 +5,7 @@ import pytest
 from django.utils import timezone
 
 from src.base.code_text import (
-    RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY,
+    RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY,
 )
 from src.apps.recipes.serializers import RecipeRetriveSerializer
 
@@ -211,4 +211,4 @@ class TestRecipeSerializers:
 
         response = api_client.patch(url, data=update_data, format="json")
         assert response.status_code == 403
-        assert response.data == RECIPE_CAN_BE_EDIT_ONLY_ONCE_PER_DAY
+        assert response.data == RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY

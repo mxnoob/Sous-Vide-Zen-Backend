@@ -84,8 +84,8 @@ class CommentViewSet(
             try:
                 int(self.kwargs.get("pk"))
             except ValueError:
-                raise ValidationError(INVALID_ID_FORMAT, code="invalid")
-            raise NotFound(COMMENT_NOT_FOUND)
+                raise ValidationError(INVALID_ID_FORMAT, code="invalid_id")
+            raise NotFound(COMMENT_NOT_FOUND, code="comment_not_found")
 
     def get_serializer_class(self):
         if self.request.method == "GET":

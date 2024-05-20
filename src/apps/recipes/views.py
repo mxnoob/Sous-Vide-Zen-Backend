@@ -20,7 +20,7 @@ from src.base.code_text import (
     CREDENTIALS_WERE_NOT_PROVIDED,
     THE_RECIPE_IS_NOT_IN_FAVORITES,
     RECIPE_REMOVED_FROM_FAVORITES,
-    THE_LIST_OF_FAVORITES_RECIPES_IS_EMPTY,
+    LIST_OF_FAVORITES_IS_EMPTY,
 )
 from src.apps.favorite.models import Favorite
 from src.apps.view.models import ViewRecipes
@@ -114,7 +114,7 @@ class RecipeViewSet(
 
         queryset = self.get_queryset()
         if not queryset:
-            return Response(THE_LIST_OF_FAVORITES_RECIPES_IS_EMPTY)
+            return Response(LIST_OF_FAVORITES_IS_EMPTY)
 
         serializer = BaseRecipeListSerializer
         page = self.paginate_queryset(queryset)
