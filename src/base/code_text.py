@@ -4,7 +4,7 @@ CREDENTIALS_WERE_NOT_PROVIDED: dict = {
     "detail": "Учетные данные не были предоставлены."
 }
 DONT_HAVE_PERMISSIONS: dict = {
-    "detail": "У вас недостаточно прав для выполнения данного " "действия."
+    "detail": "У вас недостаточно прав для выполнения данного действия."
 }
 INVALID_ID_FORMAT: dict = {"detail": "Неверный формат id."}
 
@@ -31,7 +31,7 @@ SUCCESSFUL_UNSUBSCRIBE_FROM_THE_AUTHOR: dict = {
     "message": "Вы успешно отписались от автора."
 }
 ALREADY_SUBSCRIBED_TO_THIS_AUTHOR: dict = {
-    "message": ["Вы уже подписаны на этого автора"]
+    "message": ["Вы уже подписаны на этого автора."]
 }
 
 # Reaction status
@@ -52,7 +52,7 @@ RECIPE_REMOVED_FROM_FAVORITES: dict = {"detail": "Рецепт удален из
 RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY: dict = {
     "detail": "Обновление рецепта возможно только в течение суток после создания."
 }
-AMOUNT_OF_INGREDIENT_LESS_THAN_ZERO: str = "Количество должно быть больше 0"
+AMOUNT_OF_INGREDIENT_LESS_THAN_ZERO: str = "Количество должно быть больше 0."
 MAX_COUNT_OF_INGREDIENT: str = "Максимальное количество ингредиента - 1000."
 
 # Errors status
