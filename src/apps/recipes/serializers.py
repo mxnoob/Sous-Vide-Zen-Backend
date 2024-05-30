@@ -13,7 +13,10 @@ from config.settings import SHORT_RECIPE_SYMBOLS
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
-from src.base.code_text import RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY
+from src.base.code_text import (
+    RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY,
+    MAX_COUNT_OF_INGREDIENT,
+)
 from src.base.services import (
     shorten_text,
     create_ingredients_in_recipe,
@@ -180,6 +183,13 @@ class RecipeCreateSerializer(BaseRecipeSerializer):
         ingredients_data = self.initial_data["ingredients"]
         validated_data.pop("ingredients", [])
         category_data = validated_data.pop("category", [])
+
+        for ingredient in ingredients_data:
+            if ingredient["amount"] > 1000:
+                raise serializers.ValidationError(
+                    MAX_COUNT_OF_INGREDIENT,
+                    code='no_more_than_1000'
+                )
 
         recipe = Recipe.objects.create(**validated_data)
 
