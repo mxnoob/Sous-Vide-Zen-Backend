@@ -187,8 +187,7 @@ class RecipeCreateSerializer(BaseRecipeSerializer):
         for ingredient in ingredients_data:
             if ingredient["amount"] > 1000:
                 raise serializers.ValidationError(
-                    MAX_COUNT_OF_INGREDIENT,
-                    code='no_more_than_1000'
+                    MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
                 )
 
         recipe = Recipe.objects.create(**validated_data)
