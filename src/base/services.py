@@ -5,6 +5,7 @@ from random import sample
 from typing import Type
 
 from django.contrib.contenttypes.models import ContentType
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Model
@@ -16,7 +17,11 @@ from unidecode import unidecode
 
 from config.settings import SHORT_RECIPE_SYMBOLS, TIME_FROM_VIEW_RECIPE
 from src.apps.ingredients.models import Ingredient, Unit, IngredientInRecipe
-from src.base.code_text import CANT_ADD_TWO_SIMILAR_INGREDIENT
+from src.base.code_text import (
+    CANT_ADD_TWO_SIMILAR_INGREDIENT,
+    AMOUNT_OF_INGREDIENT_LESS_THAN_ONE,
+    MAX_COUNT_OF_INGREDIENT,
+)
 
 
 def validate_avatar_size(value: Any) -> None:
@@ -235,3 +240,19 @@ def get_or_none(instance: Model, **kwargs):
         return instance.objects.get(**kwargs)
     except instance.DoesNotExist:
         return None
+
+
+def validate_amount(value):
+    """
+    Validating amount for min(1) and max(1000) count.
+    """
+
+    if value <= 0:
+        raise serializers.ValidationError(
+            AMOUNT_OF_INGREDIENT_LESS_THAN_ONE, code="amount_less_than_one"
+        )
+    if value > 1000:
+        raise serializers.ValidationError(
+            MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
+        )
+    return value
