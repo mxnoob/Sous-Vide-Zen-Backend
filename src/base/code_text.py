@@ -13,7 +13,7 @@ COMMENT_NOT_FOUND: dict = {"detail": "Комментарий не найден."
 COMMENT_SUCCESSFULLY_DELETE: dict = {"message": "Комментарий удален!"}
 CANT_EDIT_COMMENT: dict = {
     "detail": "Обновление комментария возможно только в течение суток после "
-              "создания."
+    "создания."
 }
 
 SUCCESSFUL_APPRECIATED_COMMENT: dict = {"message": "Вы оценили комментарий!"}
@@ -53,7 +53,9 @@ RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY: dict = {
     "detail": "Обновление рецепта возможно только в течение суток после создания."
 }
 AMOUNT_OF_INGREDIENT_LESS_THAN_ONE: str = "Количество должно быть больше 0."
-MAX_COUNT_OF_INGREDIENT: dict = {'errors': "Максимальное количество ингредиента - 1000."}
+MAX_COUNT_OF_INGREDIENT: dict = {
+    "errors": "Максимальное количество ингредиента - 1000."
+}
 
 # Errors status
 CANT_ADD_TWO_SIMILAR_INGREDIENT: dict = {
