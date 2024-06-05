@@ -21,6 +21,7 @@ from src.base.services import (
     shorten_text,
     create_ingredients_in_recipe,
     create_recipe_slug,
+    validate_amount,
 )
 
 
@@ -185,10 +186,7 @@ class RecipeCreateSerializer(BaseRecipeSerializer):
         category_data = validated_data.pop("category", [])
 
         for ingredient in ingredients_data:
-            if ingredient["amount"] > 1000:
-                raise serializers.ValidationError(
-                    MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
-                )
+            validate_amount(ingredient["amount"])
 
         recipe = Recipe.objects.create(**validated_data)
 
