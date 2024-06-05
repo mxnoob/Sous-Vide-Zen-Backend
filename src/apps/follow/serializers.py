@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from base.code_text import ALREADY_SUBSCRIBED_TO_THIS_AUTHOR
+from src.base.code_text import ALREADY_SUBSCRIBED_TO_THIS_AUTHOR
 from src.apps.follow.models import Follow
 from src.apps.users.models import CustomUser
 
