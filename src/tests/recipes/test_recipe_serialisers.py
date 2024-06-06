@@ -6,6 +6,8 @@ from django.utils import timezone
 
 from src.base.code_text import (
     RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY,
+    AMOUNT_OF_INGREDIENT_LESS_THAN_ONE,
+    MAX_COUNT_OF_INGREDIENT,
 )
 from src.apps.recipes.serializers import RecipeRetriveSerializer
 
@@ -117,6 +119,21 @@ class TestRecipeSerializers:
         example_response.pop("tag")
 
         assert recipe.data == example_response
+
+        # test min amount of ingredient
+        example_data["title"] = "Test Recipe"
+        example_data["ingredients"][0]["amount"] = -1
+        recipe = api_client.post("/api/v1/recipe/", example_data, format="json")
+        assert (
+            recipe.data["ingredients"][0]["amount"]
+            == AMOUNT_OF_INGREDIENT_LESS_THAN_ONE
+        )
+
+        # test max amount of ingredient
+        example_data["title"] = "Test Recipe2"
+        example_data["ingredients"][0]["amount"] = 1001
+        recipe = api_client.post("/api/v1/recipe/", example_data, format="json")
+        assert recipe.data["ingredients"][0]["amount"] == MAX_COUNT_OF_INGREDIENT
 
     def test_update_recipe_serializer(self, api_client, new_author, new_recipe):
         """
