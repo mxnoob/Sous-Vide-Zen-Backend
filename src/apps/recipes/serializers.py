@@ -15,13 +15,12 @@ from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
 from src.base.code_text import (
     RECIPE_CAN_BE_EDIT_WITHIN_FIRST_DAY,
-    MAX_COUNT_OF_INGREDIENT,
+    MAX_COUNT_OF_INGREDIENT, AMOUNT_OF_INGREDIENT_LESS_THAN_ONE,
 )
 from src.base.services import (
     shorten_text,
     create_ingredients_in_recipe,
     create_recipe_slug,
-    validate_amount,
 )
 
 
@@ -150,6 +149,21 @@ class BaseRecipeListSerializer(ModelSerializer):
             "pub_date",
         )
 
+    def validate_amount(self, value):
+        """
+        Validating amount for min(1) and max(1000) count.
+        """
+
+        if value <= 0:
+            raise serializers.ValidationError(
+                AMOUNT_OF_INGREDIENT_LESS_THAN_ONE, code="amount_less_than_one"
+            )
+        if value > 1000:
+            raise serializers.ValidationError(
+                MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
+            )
+        return value
+
 
 class RecipeRetriveSerializer(BaseRecipeSerializer):
     """
@@ -184,9 +198,6 @@ class RecipeCreateSerializer(BaseRecipeSerializer):
         ingredients_data = self.initial_data["ingredients"]
         validated_data.pop("ingredients", [])
         category_data = validated_data.pop("category", [])
-
-        for ingredient in ingredients_data:
-            validate_amount(ingredient["amount"])
 
         recipe = Recipe.objects.create(**validated_data)
 
