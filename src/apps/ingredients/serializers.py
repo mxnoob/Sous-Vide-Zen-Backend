@@ -22,17 +22,16 @@ class IngredientInRecipeSerializer(ModelSerializer):
         )
 
     def validate_amount(self, value):
-        def validate_amount(value):
-            """
-            Validating amount for min(1) and max(1000) count.
-            """
+        """
+        Validating amount for min(1) and max(1000) count.
+        """
 
-            if value <= 0:
-                raise serializers.ValidationError(
-                    AMOUNT_OF_INGREDIENT_LESS_THAN_ONE, code="amount_less_than_one"
-                )
-            if value > 1000:
-                raise serializers.ValidationError(
-                    MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
-                )
-            return value
+        if value <= 0:
+            raise serializers.ValidationError(
+                AMOUNT_OF_INGREDIENT_LESS_THAN_ONE, code="amount_less_than_one"
+            )
+        if value > 1000:
+            raise serializers.ValidationError(
+                MAX_COUNT_OF_INGREDIENT, code="no_more_than_1000"
+            )
+        return value

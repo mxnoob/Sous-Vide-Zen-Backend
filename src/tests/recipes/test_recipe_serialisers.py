@@ -122,7 +122,8 @@ class TestRecipeSerializers:
 
         # test min amount of ingredient
         example_data["title"] = "Test Recipe"
-        example_data["ingredients"][0]["amount"] = -1
+        example_data['slug'] = 'test-recipe'
+        example_data["ingredients"][0]["amount"] = 0
         recipe = api_client.post("/api/v1/recipe/", example_data, format="json")
         assert (
             recipe.data["ingredients"][0]["amount"]
@@ -130,7 +131,7 @@ class TestRecipeSerializers:
         )
 
         # test max amount of ingredient
-        example_data["title"] = "Test Recipe2"
+        example_data["title"] = "Second Test Recipe"
         example_data["ingredients"][0]["amount"] = 1001
         recipe = api_client.post("/api/v1/recipe/", example_data, format="json")
         assert recipe.data["ingredients"][0]["amount"] == MAX_COUNT_OF_INGREDIENT
