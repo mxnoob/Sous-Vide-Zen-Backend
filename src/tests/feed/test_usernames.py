@@ -1,49 +1,7 @@
 import pytest
-from django.contrib.auth import get_user_model
-from factory import Faker, RelatedFactoryList, Sequence, SubFactory
-from factory.django import DjangoModelFactory
 
-from src.apps.follow.models import Follow
-from src.apps.ingredients.models import Ingredient
-from src.apps.recipes.models import Recipe
-
-User = get_user_model()
-
-
-class UserFactory(DjangoModelFactory):
-    class Meta:
-        model = User
-
-    email = Faker("email")
-    password = Faker("password")
-    username = Faker("user_name")
-
-
-class IngredientFactory(DjangoModelFactory):
-    class Meta:
-        model = Ingredient
-
-    name = Sequence(lambda n: "word #%s" % n)
-
-
-class RecipeFactory(DjangoModelFactory):
-    class Meta:
-        model = Recipe
-
-    author = SubFactory(UserFactory)
-    title = Faker("word")
-    slug = Faker("slug")
-    full_text = Faker("text")
-    ingredients = RelatedFactoryList(IngredientFactory, size=1)
-    cooking_time = 10
-
-
-class FollowFactory(DjangoModelFactory):
-    class Meta:
-        model = Follow
-
-    user = SubFactory(UserFactory)
-    author = SubFactory(UserFactory)
+from tests.factories.base import FollowFactory
+from tests.factories.feed.factories import UserFactory, RecipeFactory
 
 
 @pytest.mark.feed
