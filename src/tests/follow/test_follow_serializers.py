@@ -14,19 +14,6 @@ from src.apps.follow.models import Follow
 from src.apps.users.models import CustomUser
 
 
-class CustomUserFactory(DjangoModelFactory):
-    """
-    Create CustomUsers
-    """
-
-    class Meta:
-        model = CustomUser
-
-    username = factory.Sequence(lambda n: f"test_user_{n}")
-    email = factory.LazyAttribute(lambda o: f"{o.username}@x.com")
-    password = "test_password"
-
-
 @pytest.mark.django_db
 @pytest.mark.api
 class TestFollowSerializers:
