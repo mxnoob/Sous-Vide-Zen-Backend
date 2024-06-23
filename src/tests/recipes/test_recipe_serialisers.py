@@ -9,7 +9,7 @@ from src.base.code_text import (
     AMOUNT_OF_INGREDIENT_LESS_THAN_ONE,
     MAX_COUNT_OF_INGREDIENT,
 )
-from src.apps.recipes.serializers import RecipeRetriveSerializer
+from src.apps.recipes.serializers import RecipeRetrieveSerializer
 
 
 @pytest.mark.django_db
@@ -48,7 +48,7 @@ class TestRecipeSerializers:
             "cooking_time": 30,
         }
         request.user = new_user
-        serializer = RecipeRetriveSerializer(new_recipe, context={"request": request})
+        serializer = RecipeRetrieveSerializer(new_recipe, context={"request": request})
         serializer_data = serializer.data.copy()
         serializer_data.pop("pub_date", None)
         serializer_data.pop("updated_at", None)

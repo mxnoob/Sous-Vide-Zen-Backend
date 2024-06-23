@@ -29,7 +29,7 @@ from src.base.permissions import IsOwnerOrStaffOrReadOnly
 from src.base.services import increment_view_count
 from .models import Recipe
 from .serializers import (
-    RecipeRetriveSerializer,
+    RecipeRetrieveSerializer,
     RecipeCreateSerializer,
     RecipeUpdateSerializer,
     BaseRecipeListSerializer,
@@ -82,7 +82,7 @@ class RecipeViewSet(
 
     def get_serializer_class(self):
         serializer_classes = {
-            "GET": RecipeRetriveSerializer,
+            "GET": RecipeRetrieveSerializer,
             "POST": RecipeCreateSerializer,
             "PATCH": RecipeUpdateSerializer,
         }
