@@ -1,6 +1,6 @@
 import pytest
 from src.apps.follow.models import Follow
-from tests.factories.follow.factories import CustomUserFactory
+from tests.factories.follow import CustomUserFactory
 
 
 @pytest.mark.django_db

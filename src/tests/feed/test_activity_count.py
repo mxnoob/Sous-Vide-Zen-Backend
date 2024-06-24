@@ -8,7 +8,7 @@ from src.apps.reactions.choices import EmojyChoice
 from src.apps.reactions.models import Reaction
 from src.apps.recipes.models import Recipe
 from src.apps.view.models import ViewRecipes
-from tests.factories.feed.factories import ReactionFactory, ViewFactory, CommentFactory
+from tests.factories.feed import ReactionFactory, ViewFactory, CommentFactory
 
 
 @pytest.mark.feed
