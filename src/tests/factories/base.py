@@ -2,7 +2,7 @@ from factory import SubFactory
 from factory.django import DjangoModelFactory
 
 from src.apps.follow.models import Follow
-from tests.factories.feed.factories import UserFactory
+from src.tests.factories.feed import UserFactory
 
 
 class FollowFactory(DjangoModelFactory):
