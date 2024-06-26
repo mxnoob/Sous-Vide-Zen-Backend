@@ -1,6 +1,4 @@
-import factory
 import pytest
-from factory.django import DjangoModelFactory
 
 from src.base.code_text import (
     USER_DOES_NOT_EXIST,

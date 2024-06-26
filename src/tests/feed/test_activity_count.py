@@ -4,11 +4,9 @@ from django.utils.timezone import make_aware
 
 from config.settings import ACTIVITY_INTERVAL
 from src.apps.comments.models import Comment
-from src.apps.reactions.choices import EmojyChoice
 from src.apps.reactions.models import Reaction
-from src.apps.recipes.models import Recipe
 from src.apps.view.models import ViewRecipes
-from tests.factories.feed import ReactionFactory, ViewFactory, CommentFactory
+from src.tests.factories.feed import ReactionFactory, CommentFactory, ViewFactory
 
 
 @pytest.mark.feed
