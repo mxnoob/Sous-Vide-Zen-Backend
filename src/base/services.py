@@ -1,11 +1,10 @@
 from datetime import timedelta
-from typing import List, Type, Any, Set
+from typing import List, Any, Set
 
 from random import sample
 from typing import Type
 
 from django.contrib.contenttypes.models import ContentType
-from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Model
@@ -19,8 +18,6 @@ from config.settings import SHORT_RECIPE_SYMBOLS, TIME_FROM_VIEW_RECIPE
 from src.apps.ingredients.models import Ingredient, Unit, IngredientInRecipe
 from src.base.code_text import (
     CANT_ADD_TWO_SIMILAR_INGREDIENT,
-    AMOUNT_OF_INGREDIENT_LESS_THAN_ONE,
-    MAX_COUNT_OF_INGREDIENT,
 )
 
 
