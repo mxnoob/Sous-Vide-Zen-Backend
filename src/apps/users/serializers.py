@@ -22,8 +22,10 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         fields = ["id", "email", "username", "password", "password2"]
 
     def validate(self, attrs):
-        if 'email' not in attrs:
-            raise serializers.ValidationError(EMAIL_IS_A_REQUIRED_FIELD, code='required_field')
+        if "email" not in attrs:
+            raise serializers.ValidationError(
+                EMAIL_IS_A_REQUIRED_FIELD, code="required_field"
+            )
 
         validate_password(attrs["password"])
         if attrs["password"] != attrs["password2"]:
