@@ -1,7 +1,7 @@
 import pytest
 from django.conf import settings
 
-from tests.factories.base import FollowFactory
+from tests.factories.factories import FollowFactory
 
 
 @pytest.mark.django_db

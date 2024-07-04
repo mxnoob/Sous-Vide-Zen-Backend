@@ -6,7 +6,7 @@ from config.settings import ACTIVITY_INTERVAL
 from src.apps.comments.models import Comment
 from src.apps.reactions.models import Reaction
 from src.apps.view.models import ViewRecipes
-from src.tests.factories.feed import ReactionFactory, CommentFactory, ViewFactory
+from src.tests.factories.factories import ReactionFactory, CommentFactory, ViewFactory
 
 
 @pytest.mark.feed

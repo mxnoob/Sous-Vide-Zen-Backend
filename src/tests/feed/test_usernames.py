@@ -1,7 +1,6 @@
 import pytest
 
-from src.tests.factories.base import FollowFactory
-from src.tests.factories.feed import UserFactory, RecipeFactory
+from src.tests.factories.factories import FollowFactory, UserFactory, RecipeFactory
 
 
 @pytest.mark.feed
