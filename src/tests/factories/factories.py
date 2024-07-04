@@ -114,9 +114,3 @@ class RecipeFactory(DjangoModelFactory):
     full_text = Faker("text")
     ingredients = RelatedFactoryList(IngredientFactory, size=1)
     cooking_time = 10
-
-
-
-
-
-
