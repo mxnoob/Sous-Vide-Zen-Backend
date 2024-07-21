@@ -9,7 +9,7 @@ from rest_framework.fields import CurrentUserDefault, HiddenField
 from rest_framework.serializers import ModelSerializer, SlugField
 from taggit.serializers import TagListSerializerField, TagList
 
-from config.settings import SHORT_RECIPE_SYMBOLS
+from django.conf import settings
 from src.apps.ingredients.serializers import IngredientInRecipeSerializer
 from src.apps.recipes.models import Recipe, Category
 from src.apps.users.serializers import AuthorInRecipeSerializer
@@ -112,7 +112,7 @@ class BaseRecipeSerializer(ModelSerializer):
         """
 
         if "full_text" in data:
-            data["short_text"] = shorten_text(data["full_text"], SHORT_RECIPE_SYMBOLS)
+            data["short_text"] = shorten_text(data["full_text"], settings.SHORT_RECIPE_SYMBOLS)
 
         if "title" in data:
             data = create_recipe_slug(Recipe, data)

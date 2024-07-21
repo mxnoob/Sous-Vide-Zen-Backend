@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets, mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from config.settings import ACTIVITY_INTERVAL
+from django.conf import settings
 from src.apps.favorite.models import Favorite
 from src.apps.recipes.models import Recipe
 from src.base.paginators import FeedPagination
@@ -34,7 +34,7 @@ class FeedUserList(mixins.ListModelMixin, viewsets.GenericViewSet):
         """
 
         last_month_start = make_aware(
-            datetime.now() - timedelta(days=ACTIVITY_INTERVAL)
+            datetime.now() - timedelta(days=settings.ACTIVITY_INTERVAL)
         )
 
         queryset = (
