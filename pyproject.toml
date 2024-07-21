@@ -1,0 +1,17 @@
+[tool.isort]
+profile = "black"
+line_length = 79
+combine_as_imports = true
+include_trailing_comma = true
+skip_glob = ["**/migrations/*.py", "*/tests/*"]
+src_paths = ["src"]
+no_lines_before = ["LOCALFOLDER"]
+
+[tool.black]
+line-length = 79
+target-version = ['py311']
+extend-exclude = """
+    settings.py
+    | migrations
+    | tests/
+"""
